@@ -3,15 +3,15 @@
 # It's suggested to download the entire *.tar.gz at https://pan.baidu.com/s/1c4RFaA
 
 # example releases
-K8S_VER=v1.10.4
-ETCD_VER=v3.3.8
-DOCKER_VER=17.03.2-ce
-CNI_VER=v0.6.0
+K8S_VER=v1.12.0
+ETCD_VER=v3.2.18
+DOCKER_VER=17.03.1-ce
+CNI_VER=v0.7.1
 DOCKER_COMPOSE=1.18.0
 HARBOR=v1.5.2
 
 echo "\nNote1: Before this script, please finish downloading binaries manually from following urls."
-echo "\nNote2：If binaries are not ready, use `Ctrl + C` to stop this script."
+echo "\nNote2：If binaries are not ready, use Ctrl + C to stop this script."
 
 echo "\n----download k8s binary at:"
 echo https://dl.k8s.io/${K8S_VER}/kubernetes-server-linux-amd64.tar.gz
@@ -37,22 +37,22 @@ echo https://github.com/vmware/harbor/releases/download/${HARBOR}/harbor-offline
 echo "\n----download cni plugins at:"
 echo https://github.com/containernetworking/plugins/releases
 
-sleep 30
+sleep 1
 
 ### prepare 'cfssl' cert tool suit
 echo "\nMoving 'cfssl' to 'bin' dir..."
 if [ -f "cfssl_linux-amd64" ]; then
-  mv -f cfssl_linux-amd64 ../bin/cfssl
+  cp -f cfssl_linux-amd64 ../bin/cfssl
 else
   echo Please download 'cfssl' at 'https://pkg.cfssl.org/R1.2/cfssl_linux-amd64'
 fi
 if [ -f "cfssljson_linux-amd64" ]; then
-  mv -f cfssljson_linux-amd64 ../bin/cfssljson
+  cp -f cfssljson_linux-amd64 ../bin/cfssljson
 else
   echo Please download 'cfssljson' at 'https://pkg.cfssl.org/R1.2/cfssljson_linux-amd64'
 fi
 if [ -f "cfssl-certinfo_linux-amd64" ]; then
-  mv -f cfssl-certinfo_linux-amd64 ../bin/cfssl-certinfo
+  cp -f cfssl-certinfo_linux-amd64 ../bin/cfssl-certinfo
 else
   echo Please download 'cfssl-certinfo' at 'https://pkg.cfssl.org/R1.2/cfssl-certinfo_linux-amd64'
 fi

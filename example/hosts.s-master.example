@@ -29,7 +29,7 @@
 DEPLOY_MODE=single-master
 
 # Versions supported: v1.8, v1.9, v1.10, v1.11, v1.12
-K8S_VER="v1.11"
+K8S_VER="v1.12"
 
 # Cluster's Master IP, auto generated
 MASTER_IP="{{ groups['kube-master'][0] }}"
@@ -58,7 +58,7 @@ CLUSTER_DNS_DOMAIN="cluster.local."
 
 # Basic auth for apiserver
 BASIC_AUTH_USER="admin"
-BASIC_AUTH_PASS="test1234"
+BASIC_AUTH_PASS="mxnavi"
 
 # -------- Additional Variables --------------------
 # Binaries Directory

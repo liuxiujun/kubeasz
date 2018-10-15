@@ -6,6 +6,5 @@ spec:
   type: NodePort
   ports:
     - port: 80
-      nodePort: 30001
   selector:
     app: nginx #与pod中的label key value相同

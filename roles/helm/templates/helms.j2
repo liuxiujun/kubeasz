@@ -1,2 +1,2 @@
 #! /bin/bash
-helm $@ --tls --tiller-namespace {{ helm_namespace }}
+{{ bin_dir }}/helm $@ --tls --tiller-namespace {{ helm_namespace }}

@@ -1,3 +1,27 @@
 - hosts: deploy
   roles:
   - cluster-storage
+  vars_prompt:
+  - name: "prompt"
+    prompt: "请确认 nfs 相关配置已经更新在本文件vars部分？, all in one 版本可以忽略该配置 [yes/no] 默认为："
+    private: no
+    default: "no"
+  vars:
+    storage:
+      nfs:
+        #需要手动打开
+        enabled: "yes"
+        #nfs service
+        server: "127.0.0.1"
+        #nfs path
+        server_path: "/nfs-data"
+        #storage_class 以后pvc申请会使用,每个nfs实例都要区分名字
+        storage_class: "storage-class-test"
+        #每个nfs实例都要区分名字
+        provisioner_name: "nfs-provisioner-test"
+      aliyun_nas:
+        enabled: "no"
+        server: "xxxxxxxxxxx.cn-hangzhou.nas.aliyuncs.com"
+        server_path: "/"
+        storage_class: "storage-aliyun-class-test"
+        provisioner_name: "nfs-provisioner-aliyun-test"

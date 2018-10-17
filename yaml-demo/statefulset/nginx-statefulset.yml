@@ -40,7 +40,7 @@ spec:
       name: www
     spec:
       accessModes: [ "ReadWriteMany" ]
-      storageClassName: nfs-199
+      storageClassName: storage-class-test
       resources:
         requests:
           storage: 10Gi

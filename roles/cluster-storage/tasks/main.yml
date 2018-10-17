@@ -1,6 +1,9 @@
+- name: 判断用户输入是否继续，输入非 yes 将不会进行任何操作
+  shell: echo "由于输入非yes，后续未进行任何操作"
+  when: 'prompt != "yes"'
+
 - import_tasks: nfs-client.yml
-  when: 'storage.nfs.enabled == "yes"'
+  when: 'storage.nfs.enabled == "yes" and prompt == "yes"'
 
 - import_tasks: alicloud-nas.yml
-  when: 'storage.aliyun_nas.enabled == "yes"'
- 
+  when: 'storage.aliyun_nas.enabled == "yes" and prompt == "yes"'

@@ -1,0 +1,55 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: factor-12
+spec:
+  ports:
+    - port: 80
+  selector:
+    app: factor-12
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: factor-12
+spec:
+  rules:
+  - host: 12factor.mxnavi.com
+    http:
+      paths:
+      - backend:
+          serviceName: factor-12
+          servicePort: 80
+---
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: factor-12
+spec:
+  selector:
+    matchLabels:
+      app: factor-12
+  replicas: 2 # tells deployment to run 2 pods matching the template
+  template:
+    metadata:
+      labels:
+        app: factor-12
+    spec:
+      containers:
+      - name: factor-12
+        image: docker.mxnavi.com/inter-system/12factor
+        resources:
+          limits:
+            cpu: 1
+          requests:
+            cpu: 0.5
+        command:
+        - /start.sh
+        env:
+        - name: env_key_1
+          value: env_value_1
+        - name: env_key_2
+          value: env_value_2
+        ports:
+        - containerPort: 80

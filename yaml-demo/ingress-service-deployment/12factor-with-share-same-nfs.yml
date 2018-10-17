@@ -1,0 +1,54 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: factor-12-with-nfs
+spec:
+  ports:
+    - port: 80
+  selector:
+    app: factor-12-with-nfs
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: factor-12-with-nfs
+spec:
+  rules:
+  - host: factor-12-with-nfs.mxnavi.com
+    http:
+      paths:
+      - backend:
+          serviceName: factor-12-with-nfs
+          servicePort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: factor-12-with-nfs
+spec:
+  selector:
+    matchLabels:
+      app: factor-12-with-nfs
+  template:
+    metadata:
+      labels:
+        app: factor-12-with-nfs
+    spec:
+      containers:
+      - image: docker.mxnavi.com/inter-system/12factor
+        name: factor-12-with-nfs
+        command:
+        - /start.sh
+        ports:
+        - containerPort: 80
+          name: web
+        volumeMounts:
+        - name: nfs-test
+          mountPath: /data
+      volumes:
+      # 宿主机上的目录
+      - name: nfs-test
+        nfs:
+          path: /data
+          server: 10.19.0.199

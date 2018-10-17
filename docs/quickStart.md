@@ -2,6 +2,8 @@
 
 以下为快速体验k8s集群的测试、开发环境--allinone部署，国内环境下觉得比官方的minikube方便、简单很多。
 
+### 0.如果在美行内部saltstack方式安装，可以直接查看 4.3 章节
+
 ### 1.基础系统配置
 
 + 推荐内存2G/硬盘30G以上
@@ -145,3 +147,25 @@ ansible-playbook 99.clean.yml
 $ umount /var/run/docker/netns/xxxxxxxxxx
 $ ansible-playbook /etc/ansible/tools/clean_one_node.yml
 ```
+
+### 8.进入 kubernetes-dashboard web 系统
+
+执行查看 kubernetes-dashboard 是否正常启动，一般需要等待一段时间 docker image 下载 
+
+``` bash
+$ kubectl get pods -n kube-system|grep kubernetes-dashboard
+```
+
+等待  kubernetes-dashboard-69dcdb65fd-5vfs6   1/1     Running   0          5m7s 后
+
+访问：
+https://xxx.xxx.xxx.xx:6443/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/login
+
+http bash auth 的用户名密码为 hosts 文件中的 BASIC_AUTH_USER 、BASIC_AUTH_PASS 字段
+
+Token 需要执行 bash 获得
+
+``` bash
+$ bash -l /etc/ansible/mxnavi-tool/get-dashboard-token.sh
+```
+

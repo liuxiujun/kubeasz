@@ -15,6 +15,9 @@
 192.168.1.2
 192.168.1.3
 
+[nfs-server]
+192.168.1.3
+
 # variable NEW_INSTALL: 'yes' to setup a new harbor server; 'no' to integrate with existed one
 [harbor]
 #192.168.1.8 HARBOR_DOMAIN="harbor.yourdomain.com" NEW_INSTALL=no

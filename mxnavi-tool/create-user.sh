@@ -1,5 +1,5 @@
 #!/bin/bash
-# 每个对应一个namespace，用户名和namespace名称相同
+# 每个对应一个namespace，用户名和namespace名称相同,同时将可以登录ui的token放在kubeconfig 中
 # 注意修改KUBE_APISERVER为你的API Server的地址
 KUBE_APISERVER=$1
 USER=$2
@@ -98,6 +98,13 @@ kubectl create ns $USER
 kubectl create rolebinding ${USER}-admin-binding --clusterrole=admin --user=$USER --namespace=$USER --serviceaccount=$USER:default
 
 kubectl config get-contexts
+
+#以下获得该用户登录页面的token
+secrets_name=`kubectl get secrets  -n $USER | grep $USER | awk '{print $1}'`
+
+ui_token=`kubectl -n $USER describe secret $secrets_name | awk '/token:/{print $2}'`
+#在文件中更新登录namespace的UI
+kubectl config set-credentials $USER --token=$ui_token --kubeconfig=${USER}.kubeconfig
 
 echo "Congratulations!"
 echo "Your kubeconfig file is ${USER}.kubeconfig"

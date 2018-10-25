@@ -3,6 +3,9 @@
 # 注意修改KUBE_APISERVER为你的API Server的地址
 KUBE_APISERVER=$1
 USER=$2
+
+#kubeapp 系统的 namespace
+KUBEAPPS_NAMESPACE="kubeapps"
 USAGE="USAGE: create-user.sh <api_server> <username>\n
 Example: https://172.22.1.1:6443 brand"
 CSR=`pwd`/user-csr.json
@@ -108,3 +111,8 @@ kubectl config set-credentials $USER --token=$ui_token --kubeconfig=${USER}.kube
 
 echo "Congratulations!"
 echo "Your kubeconfig file is ${USER}.kubeconfig"
+
+#增加用户在kubeapps中的只读权限
+kubectl create -n $KUBEAPPS_NAMESPACE rolebinding "$USER""-kubeapps-repositories-read" --role=kubeapps-repositories-read --serviceaccount $USER:default
+
+

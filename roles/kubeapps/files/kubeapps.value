@@ -1,0 +1,9 @@
+ingress:
+  enabled: true
+  hosts:
+  - name: kubeapps.mxnavi.com
+
+apprepository:
+  initialRepos:
+  - name: mxnavi
+    url: http://kube-helm-charts.mxnavi.com

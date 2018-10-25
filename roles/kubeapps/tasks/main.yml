@@ -1,0 +1,17 @@
+- name: 创建kubeapps manifests 目录
+  shell: "mkdir -p {{ base_dir }}/manifests/kubeapps/"
+
+- name: 下载 kubeapps
+  copy: src=kubeapps-0.9.2.tgz dest={{ base_dir }}/manifests/kubeapps/kubeapps.tgz
+
+- name: 下载 kubeapps values
+  copy: src=kubeapps.value dest={{ base_dir }}/manifests/kubeapps/kubeapps.value
+
+- name: helm 安装 kubeapps
+  shell: "{{ bin_dir }}/helm install --name kubeapps --namespace kubeapps --values {{ base_dir }}/manifests/kubeapps/kubeapps.value {{ base_dir }}/manifests/kubeapps/kubeapps.tgz"
+
+- name: 下载 kubeapps read only auth
+  copy: src=kubeapps-repositories-read.yaml dest={{ base_dir }}/manifests/kubeapps/kubeapps-repositories-read.yaml
+
+- name: 增加kubeapps只读权限
+  shell: "kubectl apply -n kubeapps -f {{ base_dir }}/manifests/kubeapps/kubeapps-repositories-read.yaml"

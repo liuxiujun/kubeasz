@@ -14,4 +14,4 @@
   copy: src=kubeapps-repositories-read.yaml dest={{ base_dir }}/manifests/kubeapps/kubeapps-repositories-read.yaml
 
 - name: 增加kubeapps只读权限
-  shell: "kubectl apply -n kubeapps -f {{ base_dir }}/manifests/kubeapps/kubeapps-repositories-read.yaml"
+  shell: "{{ bin_dir }}/kubectl apply -n kubeapps -f {{ base_dir }}/manifests/kubeapps/kubeapps-repositories-read.yaml"

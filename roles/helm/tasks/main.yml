@@ -22,3 +22,12 @@
     state: present
     regexp: 'helm completion'
     line: 'source <(helm completion bash)'
+
+# helm 安装成功 使用 helm version
+- name: 轮询等待helm启动成功，视下载镜像速度而定
+  shell: "{{ bin_dir }}/kubectl get pod -n kube-system -o wide|grep tiller|awk '{print $3}'"
+  register: helm_status
+  until: helm_status.stdout == "Running"
+  delegate_to: "{{ groups.deploy[0] }}"
+  retries: 15
+  delay: 8

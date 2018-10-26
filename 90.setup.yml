@@ -74,3 +74,28 @@
   roles:
   - cluster-addon 
 
+# install helm
+- hosts: deploy
+  roles:
+  - helm
+  vars:
+    helm_namespace: kube-system
+    helm_cert_cn: helm001
+    tiller_sa: tiller
+    tiller_cert_cn: tiller001
+    tiller_image: docker.mxnavi.com/k8s/tiller:v2.11.0
+
+# install nginx ingress
+- hosts: deploy
+  roles:
+  - nginx-ingress
+  vars:
+    controller_image_repository: docker.mxnavi.com/k8s/nginx-ingress-controller
+    controller_image_tag: 0.19.0
+    defaultBackend_image_repository: docker.mxnavi.com/k8s/defaultbackend-amd64
+    defaultBackend_image_tag: 1.5
+
+# install kubeapps
+- hosts: deploy
+  roles:
+  - kubeapps

@@ -12,6 +12,8 @@ hosts
 # k8s storage manifests 
 manifests/storage/*
 !manifests/storage/test.yaml
+manifests/kubeapps/*
+manifests/nginx-ingress/*
 
 # k8s backup directory
 roles/cluster-backup/files/*

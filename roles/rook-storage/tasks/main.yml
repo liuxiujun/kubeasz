@@ -1,0 +1,26 @@
+- name: 创建rook storage manifests 目录
+  shell: "mkdir -p {{ base_dir }}/manifests/rook-storage/"
+
+- name: 下载 rook ceph charts
+  copy: src=rook-ceph-v0.8.3.tgz dest={{ base_dir }}/manifests/rook-storage/rook-ceph.tgz
+
+- name: helm 安装 rook operator
+  shell: "{{ bin_dir }}/helm install --name rook-ceph --namespace rook-ceph-system {{ base_dir }}/manifests/rook-storage/rook-ceph.tgz"
+
+- name: 下载 rook cluster yaml
+  copy: src=cluster.yaml dest={{ base_dir }}/manifests/rook-storage/cluster.yaml
+
+- name: 下载 rook storageclass.yaml
+  copy: src=storageclass.yaml dest={{ base_dir }}/manifests/rook-storage/storageclass.yaml
+
+- name: 下载 rook dashboard-external.yaml
+  copy: src=dashboard-external.yaml dest={{ base_dir }}/manifests/rook-storage/dashboard-external.yaml
+
+- name: 创建 rook cluster
+  shell: "{{ bin_dir }}/kubectl apply -f {{ base_dir }}/manifests/rook-storage/cluster.yaml"
+
+- name: 创建 rook storageclass.yaml
+  shell: "{{ bin_dir }}/kubectl apply -f {{ base_dir }}/manifests/rook-storage/storageclass.yaml"
+
+- name: 创建 rook dashboard-external.yaml
+  shell: "{{ bin_dir }}/kubectl apply -f {{ base_dir }}/manifests/rook-storage/dashboard-external.yaml"

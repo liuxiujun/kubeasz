@@ -1,0 +1,12 @@
+- name: apt install nfs-kernel-server
+  shell: apt install -y nfs-kernel-server
+
+- name: 创建nfs共享目录
+  shell: mkdir /nfs-data
+  ignore_errors: yes
+
+- name: 创建 /etc/exports 挂载描述
+  template: src=nfs/exports.j2 dest=/etc/exports
+
+- name: 重启nfs
+  shell: service nfs-server restart

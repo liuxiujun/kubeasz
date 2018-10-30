@@ -1,0 +1,15 @@
+- import_tasks: nfs-server.hml
+
+- name: 准备nfs-client 配置目录
+  file: name={{ base_dir }}/manifests/storage/nfs state=directory
+
+- name: 生成nfs-client动态存储配置
+  template:
+    src: nfs/nfs-client-provisioner.yaml.j2
+    dest: "{{ base_dir }}/manifests/storage/nfs/{{ storage.nfs.provisioner_name }}.yaml"
+
+- name: 开始部署nfs-client动态存储
+  shell: "{{ bin_dir }}/kubectl apply -f {{ base_dir }}/manifests/storage/nfs/{{ storage.nfs.provisioner_name }}.yaml"
+
+- name: 设置该存储为默认存储
+  shell: "{{ bin_dir }}/kubectl patch storageclass {{ storage.nfs.storage_class }} -p '{\"metadata\": {\"annotations\":{\"storageclass.kubernetes.io/is-default-class\":\"true\"}}}'"

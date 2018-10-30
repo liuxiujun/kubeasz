@@ -10,6 +10,28 @@
 
 - name: 开始部署nfs-client动态存储
   shell: "{{ bin_dir }}/kubectl apply -f {{ base_dir }}/manifests/storage/nfs/{{ storage.nfs.provisioner_name }}.yaml"
+  vars:
+    storage:
+      nfs:
+        #nfs service
+        server: "127.0.0.1"
+        #nfs path
+        server_path: "/nfs-data"
+        #storage_class 以后pvc申请会使用,每个nfs实例都要区分名字
+        storage_class: "storage-class-nfs-default"
+        #每个nfs实例都要区分名字
+        provisioner_name: "nfs-provisioner-nfs-default"
 
 - name: 设置该存储为默认存储
   shell: "{{ bin_dir }}/kubectl patch storageclass {{ storage.nfs.storage_class }} -p '{\"metadata\": {\"annotations\":{\"storageclass.kubernetes.io/is-default-class\":\"true\"}}}'"
+  vars:
+    storage:
+      nfs:
+        #nfs service
+        server: "127.0.0.1"
+        #nfs path
+        server_path: "/nfs-data"
+        #storage_class 以后pvc申请会使用,每个nfs实例都要区分名字
+        storage_class: "storage-class-nfs-default"
+        #每个nfs实例都要区分名字
+        provisioner_name: "nfs-provisioner-nfs-default"

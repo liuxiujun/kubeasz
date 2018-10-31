@@ -97,7 +97,6 @@
     - "/var/lib/cni/"
     - "/var/lib/docker/"
     - "/var/lib/kube-router/"
-    - "/var/run/docker/"
     - "/etc/systemd/system/calico-node.service"
     - "/etc/systemd/system/docker.service"
     - "/etc/systemd/system/docker.service.requires/"
@@ -114,8 +113,7 @@
 	&& iptables -F -t mangle && iptables -X -t mangle"
 
   - name: cleanup networks
-    shell: "ip link del docker0; \
-	ip link del tunl0; \
+    shell: "ip link del tunl0; \
 	ip link del flannel.1; \
 	ip link del cni0; \
         ip link del mynet0; \

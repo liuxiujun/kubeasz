@@ -27,6 +27,7 @@
 # 预留组，后续添加master节点使用
 [new-master]
 #192.168.1.5
+[del-node]
 
 # 预留组，后续添加node节点使用
 [new-node]

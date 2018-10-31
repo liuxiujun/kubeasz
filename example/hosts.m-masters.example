@@ -37,7 +37,8 @@
 # group reserved, add new 'kube-node' in it
 [new-node]
 #192.168.1.xx
-
+[del-node]
+#
 [all:vars]
 # --------- Main Variables ---------------
 # Cluster Deployment Mode: allinone, single-master, multi-master

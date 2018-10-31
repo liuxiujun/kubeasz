@@ -48,12 +48,12 @@
   - name: unmount docker filesystem-1
     mount: path=/var/run/docker/netns/default state=unmounted
     ignore_errors: true
-    when: ansible_distribution == "Ubuntu" and ansible_distribution_version == "14.04"
+    when: ansible_distribution == "Ubuntu" and ansible_distribution_version == "16.04"
 
   - name: unmount docker filesystem-2
     mount: path=/var/lib/docker/overlay state=unmounted
     ignore_errors: true
-    when: ansible_distribution == "Ubuntu" and ansible_distribution_version == "14.04"
+    when: ansible_distribution == "Ubuntu" and ansible_distribution_version == "16.04"
 
   - name: remove files and dirs
     file: name={{ item }} state=absent
@@ -85,6 +85,7 @@
 	&& iptables -F -t nat && iptables -X -t nat \
 	&& iptables -F -t raw && iptables -X -t raw \
 	&& iptables -F -t mangle && iptables -X -t mangle"
+    when: ansible_distribution == "Ubuntu" and ansible_distribution_version == "16.04"
 
   - name: cleanup networks
     shell: "ip link del tunl0; \

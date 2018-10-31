@@ -15,7 +15,9 @@ cd /var/lib/kubelet
 /sbin/iptables -A INPUT -s 192.168.0.0/16 -p tcp --dport 4194 -j ACCEPT
 /sbin/iptables -A INPUT -p tcp --dport 4194 -j DROP
 
-nohup {{ bin_dir }}/kubelet \
+start-stop-daemon --make-pidfile --name kubelet --background --start --pidfile /var/run/kuberlet.pid --exec \
+{{ bin_dir }}/kubelet \
+  -- \
   --address={{ inventory_hostname }} \
   --allow-privileged=true \
   --anonymous-auth=false \
@@ -39,11 +41,16 @@ nohup {{ bin_dir }}/kubelet \
   --tls-private-key-file={{ ca_dir }}/kubelet-key.pem \
   --v=2 \
   --runtime-cgroups=/systemd/system.slice \
-  --kubelet-cgroups=/systemd/system.slice >> /var/log/kubelet.log  &
+  --kubelet-cgroups=/systemd/system.slice
+        ;;
+  status)
+     status_of_proc -p /var/run/kuberlet.pid {{ bin_dir }}/kubelet "kebelet"
+        ;;
 
-        ;;
-  stop|restart|force-reload)
-        ;;
+  stop)
+     start-stop-daemon --stop --name kubelet
+     ;;
+
   *)
         ;;
 esac

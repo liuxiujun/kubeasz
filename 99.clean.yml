@@ -27,6 +27,7 @@
     - "/etc/systemd/system/kubelet.service"
     - "/etc/systemd/system/kube-proxy.service"
     - "/opt/kube/kube-system/"
+    ignore_errors: true
 
 # to clean 'kube-master' nodes
 - hosts:
@@ -67,13 +68,18 @@
       state: stopped
       enabled: no
     ignore_errors: true
+    when: ansible_distribution == "Ubuntu" and ansible_distribution_version == "16.04"
 
   # as k8s-network-plugins use host-network, '/var/run/docker/netns/default' must be umounted
   - name: unmount docker filesystem-1
     mount: path=/var/run/docker/netns/default state=unmounted
+    ignore_errors: true
+    when: ansible_distribution == "Ubuntu" and ansible_distribution_version == "14.04"
 
   - name: unmount docker filesystem-2
     mount: path=/var/lib/docker/overlay state=unmounted
+    ignore_errors: true
+    when: ansible_distribution == "Ubuntu" and ansible_distribution_version == "14.04"
 
   - name: remove files and dirs
     file: name={{ item }} state=absent
@@ -97,6 +103,8 @@
     - "/etc/systemd/system/docker.service.requires/"
     - "/opt/kube/kube-system/"
     - "/etc/bash_completion.d/docker"
+    - "/etc/init.d/kubelet"
+    - "/etc/init.d/kube-proxy"
     ignore_errors: true
 
   - name: cleanup iptables
@@ -195,3 +203,12 @@
     - 'kubeasz'
     - 'helm'
     - 'kubectl completion'
+
+- hosts:
+  - kube-node
+  - new-node
+  tasks:
+  - name: cleanup ubuntu1404 k8s docker 实例
+    shell: "docker rm -f `docker ps |grep k8s|awk '{print $1}'`"
+    when: ansible_distribution == "Ubuntu" and ansible_distribution_version == "14.04"
+    ignore_errors: true

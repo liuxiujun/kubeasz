@@ -1,0 +1,26 @@
+#! /bin/bash
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+
+. /lib/lsb/init-functions
+. /etc/default/rcS
+
+case "$1" in
+  start)
+
+cd /var/lib/kube-proxy
+nohup {{ bin_dir }}/kube-proxy \
+  --bind-address={{ inventory_hostname }} \
+  --hostname-override={{ inventory_hostname }} \
+  --kubeconfig=/etc/kubernetes/kube-proxy.kubeconfig \
+  --logtostderr=true \
+  --proxy-mode={{ PROXY_MODE }} >> /var/log/kube-proxy.log &
+
+        ;;
+  stop|restart|force-reload)
+        ;;
+  *)
+        ;;
+esac
+
+exit 0

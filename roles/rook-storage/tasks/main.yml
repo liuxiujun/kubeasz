@@ -16,6 +16,9 @@
 - name: 下载 rook dashboard-external.yaml
   copy: src=dashboard-external.yaml dest={{ base_dir }}/manifests/rook-storage/dashboard-external.yaml
 
+- name: 下载 rook toolbox.yaml
+  copy: src=toolbox.yaml dest={{ base_dir }}/manifests/rook-storage/toolbox.yaml
+
 - name: 创建 rook cluster
   shell: "{{ bin_dir }}/kubectl apply -f {{ base_dir }}/manifests/rook-storage/cluster.yaml"
 
@@ -24,3 +27,6 @@
 
 - name: 创建 rook dashboard-external.yaml
   shell: "{{ bin_dir }}/kubectl apply -f {{ base_dir }}/manifests/rook-storage/dashboard-external.yaml"
+
+- name: 创建 rook toolbox.yaml
+  shell: "{{ bin_dir }}/kubectl apply -f {{ base_dir }}/manifests/rook-storage/toolbox.yaml"

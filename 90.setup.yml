@@ -101,6 +101,9 @@
   - kubeapps
 
 # install rook ceph
+#- hosts: deploy
+#  roles:
+#  - rook-storage 
 - hosts: deploy
   roles:
-  - rook-storage 
+  - default-storage

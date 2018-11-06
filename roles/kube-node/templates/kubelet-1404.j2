@@ -1,0 +1,58 @@
+#! /bin/bash
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/bin/
+
+. /lib/lsb/init-functions
+. /etc/default/rcS
+
+case "$1" in
+  start)
+
+cd /var/lib/kubelet
+
+/sbin/iptables -A INPUT -s 10.0.0.0/8 -p tcp --dport 4194 -j ACCEPT
+/sbin/iptables -A INPUT -s 172.16.0.0/12 -p tcp --dport 4194 -j ACCEPT
+/sbin/iptables -A INPUT -s 192.168.0.0/16 -p tcp --dport 4194 -j ACCEPT
+/sbin/iptables -A INPUT -p tcp --dport 4194 -j DROP
+
+start-stop-daemon --make-pidfile --name kubelet --background --start --pidfile /var/run/kuberlet.pid --exec \
+{{ bin_dir }}/kubelet \
+  -- \
+  --address={{ inventory_hostname }} \
+  --allow-privileged=true \
+  --anonymous-auth=false \
+  --authentication-token-webhook \
+  --authorization-mode=Webhook \
+  --client-ca-file={{ ca_dir }}/ca.pem \
+  --cluster-dns={{ CLUSTER_DNS_SVC_IP }} \
+  --cluster-domain={{ CLUSTER_DNS_DOMAIN }} \
+  --cni-bin-dir={{ bin_dir }} \
+  --cni-conf-dir=/etc/cni/net.d \
+  --fail-swap-on=false \
+  --hairpin-mode hairpin-veth \
+  --hostname-override={{ inventory_hostname }} \
+  --kubeconfig=/etc/kubernetes/kubelet.kubeconfig \
+  --max-pods={{ MAX_PODS }} \
+  --network-plugin=cni \
+  --pod-infra-container-image=mirrorgooglecontainers/pause-amd64:3.1 \
+  --register-node=true \
+  --root-dir={{ KUBELET_ROOT_DIR }} \
+  --tls-cert-file={{ ca_dir }}/kubelet.pem \
+  --tls-private-key-file={{ ca_dir }}/kubelet-key.pem \
+  --v=2 \
+  --runtime-cgroups=/systemd/system.slice \
+  --kubelet-cgroups=/systemd/system.slice
+        ;;
+  status)
+     status_of_proc -p /var/run/kuberlet.pid {{ bin_dir }}/kubelet "kebelet"
+        ;;
+
+  stop)
+     start-stop-daemon --stop --name kubelet
+     ;;
+
+  *)
+        ;;
+esac
+
+exit 0

@@ -1,0 +1,31 @@
+#! /bin/bash
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+
+. /lib/lsb/init-functions
+. /etc/default/rcS
+
+case "$1" in
+  start)
+
+cd /var/lib/kube-proxy
+start-stop-daemon --make-pidfile --name kube-proxy --background --start --pidfile /var/run/kube-proxy.pid --exec \
+{{ bin_dir }}/kube-proxy \
+  -- \
+  --bind-address={{ inventory_hostname }} \
+  --hostname-override={{ inventory_hostname }} \
+  --kubeconfig=/etc/kubernetes/kube-proxy.kubeconfig \
+  --logtostderr=true \
+  --proxy-mode={{ PROXY_MODE }}
+        ;;
+  status)
+     status_of_proc -p /var/run/kube-proxy.pid {{ bin_dir }}/kube-proxy "kube-proxy"
+        ;;
+  stop)
+     start-stop-daemon --stop --name kube-proxy
+        ;;
+  *)
+        ;;
+esac
+
+exit 0

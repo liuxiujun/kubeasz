@@ -18,3 +18,4 @@
 
 - name: 增加kubeapps的管理权限
   shell: "{{ bin_dir }}/kubectl create clusterrolebinding  kubeapps-internal-apprepository-controller-admin-clusterbinding --clusterrole=admin --user=system:serviceaccount:kubeapps:kubeapps-internal-apprepository-controller --namespace=kubeapps --serviceaccount=kubeapps-internal-apprepository-controller:default"
+  ignore_errors: true

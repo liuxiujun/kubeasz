@@ -2,7 +2,7 @@
   shell: "mkdir -p {{ base_dir }}/manifests/kubeapps/"
 
 - name: 下载 kubeapps
-  copy: src=kubeapps-0.9.4.tgz dest={{ base_dir }}/manifests/kubeapps/kubeapps.tgz
+  copy: src=kubeapps-1.0.0.tgz dest={{ base_dir }}/manifests/kubeapps/kubeapps.tgz
 
 - name: 下载 kubeapps values
   copy: src=kubeapps.value dest={{ base_dir }}/manifests/kubeapps/kubeapps.value
@@ -15,3 +15,6 @@
 
 - name: 增加kubeapps只读权限
   shell: "{{ bin_dir }}/kubectl apply -n kubeapps -f {{ base_dir }}/manifests/kubeapps/kubeapps-repositories-read.yaml"
+
+- name: 增加kubeapps的管理权限
+  shell: "{{ bin_dir }}/kubectl create clusterrolebinding  kubeapps-internal-apprepository-controller-admin-clusterbinding --clusterrole=admin --user=system:serviceaccount:kubeapps:kubeapps-internal-apprepository-controller --namespace=kubeapps --serviceaccount=kubeapps-internal-apprepository-controller:default"

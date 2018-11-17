@@ -1,11 +1,11 @@
 apiVersion: ceph.rook.io/v1beta1
 kind: Pool
 metadata:
-  name: replicapool
+  name: replicapool-2
   namespace: rook-ceph
 spec:
   replicated:
-    size: 2
+    size: 1
   # For an erasure-coded pool, comment out the replication size above and uncomment the following settings.
   # Make sure you have enough OSDs to support the replica size or erasure code chunks.
   #erasureCoded:
@@ -15,10 +15,10 @@ spec:
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-   name: rook-ceph-block
+   name: rook-ceph-block-2
 provisioner: ceph.rook.io/block
 parameters:
-  pool: replicapool
+  pool: replicapool-2
   # Specify the namespace of the rook cluster from which to create volumes.
   # If not specified, it will use `rook` as the default namespace of the cluster.
   # This is also the namespace where the cluster will be

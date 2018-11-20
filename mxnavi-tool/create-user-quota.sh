@@ -115,6 +115,11 @@ echo "Your kubeconfig file is ${USER}.kubeconfig"
 #增加用户在kubeapps中的只读权限
 kubectl create -n $KUBEAPPS_NAMESPACE rolebinding "$USER""-kubeapps-repositories-read" --role=kubeapps-repositories-read --serviceaccount $USER:default
 
+#设置默认限额
+kubectl create -n $USER -f ./limit-cpu.yml
+kubectl create -n $USER -f ./limit-mem.yml
+echo "默认限额设置为：\nCPU: 2\nMem:1Gi"
+
 #配额设置
 
 read -n1 -p "是否为该用户设定配额？[Y/N]：" QUOTASET

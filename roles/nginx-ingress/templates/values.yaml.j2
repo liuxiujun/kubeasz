@@ -1,0 +1,23 @@
+rbac:
+  create: true
+
+controller:
+  image:
+    repository: {{ controller_image_repository }}
+    tag: {{ controller_image_tag }}
+  daemonset:
+    useHostPort: true
+  hostNetwork: true
+  type: ClusterIP
+  #https://github.com/kubernetes/ingress-nginx/blob/master/docs/user-guide/nginx-configuration/configmap.md#proxy-read-timeout
+  config:
+     client-header-timeout: "3600"
+     client-body-timeout: "3600"
+     proxy-connect-timeout: "30"
+     proxy-read-timeout: "3600"
+     proxy-send-timeout: "3600"
+
+defaultBackend:
+  image:
+    repository: {{ defaultBackend_image_repository }}
+    tag: {{ defaultBackend_image_tag }}

@@ -1,6 +1,13 @@
+- name: 建立nginx ingress 目录
+  shell: mkdir -p {{ base_dir }}/manifests/nginx-ingress/nginx-ingress
+  ignore_errors: true
+
 - name: 下载nginx ingress helm package
-  copy: src=nginx-ingress/ dest={{ base_dir }}/manifests/nginx-ingress
+  copy: src=nginx-ingress/ dest={{ base_dir }}/manifests/nginx-ingress/nginx-ingress
+
+- name: 下载nginx ingress values
+  template: src=values.yaml.j2 dest={{ base_dir }}/manifests/nginx-ingress/values.yaml
 
 - name: helm 安装 nginx ingress
-#  shell: "{{ bin_dir }}/helm install --namespace nginx-ingress --name nginx-ingress {{ base_dir }}/manifests/nginx-ingress --set rbac.create=true --set controller.service.type=NodePort  --set controller.service.nodePorts.http={{ controller_service_nodePorts_http  }} --set controller.service.nodePorts.https={{ controller_service_nodePorts_https }}  --set controller.image.repository={{ controller_image_repository }} --set controller.image.tag={{ controller_image_tag }} --set defaultBackend.image.repository={{ defaultBackend_image_repository }} --set defaultBackend.image.tag={{ defaultBackend_image_tag }}"
-  shell: "{{ bin_dir }}/helm install --namespace nginx-ingress --name nginx-ingress {{ base_dir }}/manifests/nginx-ingress --set rbac.create=true --set controller.image.repository={{ controller_image_repository }} --set controller.image.tag={{ controller_image_tag }} --set defaultBackend.image.repository={{ defaultBackend_image_repository }} --set defaultBackend.image.tag={{ defaultBackend_image_tag }} --set controller.daemonset.useHostPort=true --set controller.hostNetwork=true"
+#  shell: "{{ bin_dir }}/helm install --namespace nginx-ingress --name nginx-ingress {{ base_dir }}/manifests/nginx-ingress/nginx-ingress --set rbac.create=true --set controller.image.repository={{ controller_image_repository }} --set controller.image.tag={{ controller_image_tag }} --set defaultBackend.image.repository={{ defaultBackend_image_repository }} --set defaultBackend.image.tag={{ defaultBackend_image_tag }} --set controller.daemonset.useHostPort=true --set controller.hostNetwork=true"
+  shell: "{{ bin_dir }}/helm install --namespace nginx-ingress --name nginx-ingress --values {{ base_dir }}/manifests/nginx-ingress/values.yaml {{ base_dir }}/manifests/nginx-ingress/nginx-ingress"

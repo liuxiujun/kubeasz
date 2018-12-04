@@ -1,0 +1,13 @@
+- name: 创建istio manifests 目录
+  shell: "mkdir -p {{ base_dir }}/manifests/istio/"
+
+- name: 下载 istio
+  copy: src=istio-1.0.4 dest={{ base_dir }}/manifests/istio/istio-1.0.4
+
+- name: 下载 values
+  copy: src=istio.value dest={{ base_dir }}/manifests/istio/istio.value
+
+- name: 安装 istioctl
+  copy: src=istio-1.0.4/bin/{{ item }} dest={{ bin_dir }}/{{ item }} mode=0755
+  with_items:
+  - istioctl

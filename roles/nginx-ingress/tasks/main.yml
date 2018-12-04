@@ -9,5 +9,14 @@
   template: src=values.yaml.j2 dest={{ base_dir }}/manifests/nginx-ingress/values.yaml
 
 - name: helm 安装 nginx ingress
-#  shell: "{{ bin_dir }}/helm install --namespace nginx-ingress --name nginx-ingress {{ base_dir }}/manifests/nginx-ingress/nginx-ingress --set rbac.create=true --set controller.image.repository={{ controller_image_repository }} --set controller.image.tag={{ controller_image_tag }} --set defaultBackend.image.repository={{ defaultBackend_image_repository }} --set defaultBackend.image.tag={{ defaultBackend_image_tag }} --set controller.daemonset.useHostPort=true --set controller.hostNetwork=true"
   shell: "{{ bin_dir }}/helm install --namespace nginx-ingress --name nginx-ingress --values {{ base_dir }}/manifests/nginx-ingress/values.yaml {{ base_dir }}/manifests/nginx-ingress/nginx-ingress"
+
+- name: 非multi-master安装方式，deploy master机器作为nginx主机
+  shell: "{{ bin_dir }}/kubectl label nodes {{ inventory_hostname }} role=nginx-ingress --overwrite=true"
+  delegate_to: "{{ groups.deploy[0] }}"
+  when: DEPLOY_MODE != "multi-master"
+
+- name: multi-master安装方式，需要定义独享的nginx节点
+  shell: "{{ bin_dir }}/kubectl label nodes {{ inventory_hostname }} role=nginx-ingress --overwrite=true"
+  delegate_to: "{{ groups.nginx[0] }}"
+  when: DEPLOY_MODE == "multi-master"

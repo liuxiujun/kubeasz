@@ -5,10 +5,12 @@ controller:
   image:
     repository: {{ controller_image_repository }}
     tag: {{ controller_image_tag }}
-  daemonset:
-    useHostPort: true
+  #daemonset:
+  #  useHostPort: true
   hostNetwork: true
-  type: ClusterIP
+  dnsPolicy: ClusterFirstWithHostNet
+  service:
+    type: ClusterIP
   #https://github.com/kubernetes/ingress-nginx/blob/master/docs/user-guide/nginx-configuration/configmap.md#proxy-read-timeout
   config:
      client-header-timeout: "3600"
@@ -16,6 +18,30 @@ controller:
      proxy-connect-timeout: "30"
      proxy-read-timeout: "3600"
      proxy-send-timeout: "3600"
+
+  tolerations:
+    - key: "nginx-ingress"
+      operator: "Equal"
+      value: "true"
+      effect: "NoSchedule"
+
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+            - key: role
+              operator: In
+              values:
+              - nginx-ingress
+
+  resources:
+    limits:
+      cpu: 2
+      memory: 2048Mi
+    requests:
+      cpu: 2
+      memory: 2048Mi
 
 defaultBackend:
   image:

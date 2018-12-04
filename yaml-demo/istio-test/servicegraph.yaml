@@ -1,0 +1,15 @@
+kind: Service
+apiVersion: v1
+metadata:
+#  name: grafana-service
+  name: servicegraph-service
+  namespace: istio-system
+spec:
+  type: NodePort
+  ports:
+#    - port: 3000
+    - port: 8088
+  selector:
+#    app: grafana #与pod中的label key value相同
+    app: servicegraph #与pod中的label key value相同
+

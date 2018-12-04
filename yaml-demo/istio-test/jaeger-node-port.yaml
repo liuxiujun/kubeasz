@@ -1,0 +1,15 @@
+kind: Service
+apiVersion: v1
+metadata:
+#  name: grafana-service
+  name: jaeger-service
+  namespace: istio-system
+spec:
+  type: NodePort
+  ports:
+#    - port: 3000
+    - port: 16686
+  selector:
+#    app: grafana #与pod中的label key value相同
+    app: jaeger #与pod中的label key value相同
+

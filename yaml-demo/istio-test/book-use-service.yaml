@@ -1,0 +1,23 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: book-service
+spec:
+  rules:
+  - host: book-service.mxnavi.com
+    http:
+      paths:
+      - backend:
+          serviceName: book-service
+          servicePort: 9080
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: book-service
+spec:
+  type: NodePort
+  ports:
+    - port: 9080
+  selector:
+    app: productpage #与pod中的label key value相同

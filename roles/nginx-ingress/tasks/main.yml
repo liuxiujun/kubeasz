@@ -17,6 +17,5 @@
   when: DEPLOY_MODE != "multi-master"
 
 - name: multi-master安装方式，需要定义独享的nginx节点
-  shell: "{{ bin_dir }}/kubectl label nodes {{ inventory_hostname }} role=nginx-ingress --overwrite=true"
-  delegate_to: "{{ groups.nginx[0] }}"
+  shell: "{{ bin_dir }}/kubectl label nodes {{ groups.nginx[0] }} role=nginx-ingress --overwrite=true"
   when: DEPLOY_MODE == "multi-master"

@@ -2,12 +2,15 @@
   shell: "mkdir -p {{ base_dir }}/manifests/istio/"
 
 - name: 下载 istio
-  copy: src=istio-1.0.4 dest={{ base_dir }}/manifests/istio/istio-1.0.4
+  copy: src=istio-1.0.4/install/kubernetes/helm/istio dest={{ base_dir }}/manifests/istio/
 
 - name: 下载 values
-  copy: src=istio.value dest={{ base_dir }}/manifests/istio/istio.value
+  template: src=values.yaml.j2 dest={{ base_dir }}/manifests/istio/values.yaml
 
 - name: 安装 istioctl
   copy: src=istio-1.0.4/bin/{{ item }} dest={{ bin_dir }}/{{ item }} mode=0755
   with_items:
   - istioctl
+
+- name: helm 安装 istio
+  shell: "{{ bin_dir }}/helm install --namespace istio-system --name istio --values {{ base_dir }}/manifests/istio/values.yaml {{ base_dir }}/manifests/istio/istio"

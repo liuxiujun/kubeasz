@@ -18,5 +18,9 @@
 - name: helm 制作 template
   shell: "{{ bin_dir }}/helm template --namespace istio-system --name istio --values {{ base_dir }}/manifests/istio/values.yaml {{ base_dir }}/manifests/istio/istio > {{ base_dir }}/manifests/istio/istio-after-helm-template.yaml"
 
+- name: 创建istio-system namespace
+  shell: "{{ bin_dir }}/kubectl create namespace istio-system"
+  ignore_errors: true
+
 - name: kubectl apply istio-after-helm-template
   shell: "{{ bin_dir }}/kubectl apply -f {{ base_dir }}/manifests/istio/istio-after-helm-template.yaml"

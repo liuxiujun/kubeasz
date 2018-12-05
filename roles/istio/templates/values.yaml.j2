@@ -2,15 +2,63 @@ global:
   proxy:
     #只包含本k8s内的pod、svc网段
     includeIPRanges: "{{ SERVICE_CIDR }},{{ CLUSTER_CIDR }}"
+  #取消policy前置检查
+  disablePolicyChecks: true
+  #policy模块可以失败
+  policyCheckFailOpen: true
+
 
 gateways:
-  istio-ingressgateway:
-    type: NodePort
-  istio-egressgateway:
-    type: NodePort
+  enabled: false
+
+galley:
+  enabled: false
 
 tracing:
+  enabled: false
+
+servicegraph:
+  enabled: false
+
+#
+# mixer configuration
+#
+mixer:
   enabled: true
+  replicaCount: 3
+  autoscaleMin: 3
+  autoscaleMax: 10
+
+  istio-policy:
+    autoscaleEnabled: true
+    autoscaleMin: 3
+    autoscaleMax: 10
+    cpu:
+      targetAverageUtilization: 80
+
+  istio-telemetry:
+    autoscaleEnabled: true
+    autoscaleMin: 3
+    autoscaleMax: 10
+    cpu:
+      targetAverageUtilization: 80
+
+#
+# pilot configuration
+#
+pilot:
+  enabled: true
+  replicaCount: 3
+  autoscaleMin: 3
+  autoscaleMax: 10
+  image: pilot
+  # Resources for a small pilot install
+  resources:
+    requests:
+      cpu: 1
+      memory: 4048Mi
+  cpu:
+    targetAverageUtilization: 80
 
 prometheus:
   enabled: true
@@ -20,18 +68,15 @@ prometheus:
       port: 32090
   security:
     enabled: false
-  #  adminUser: admin
-  #  adminPassword: mxnavi
+    adminUser: admin
+    adminPassword: mxnavi
 
 grafana:
   enabled: true
   persist: false
   storageClassName: ""
-  #service:
-  #  type: NodePort
-
-servicegraph:
-  enabled: true
+  service:
+    type: NodePort
 
 kiali:
   enabled: true

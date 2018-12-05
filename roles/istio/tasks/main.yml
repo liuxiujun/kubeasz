@@ -12,5 +12,11 @@
   with_items:
   - istioctl
 
-- name: helm 安装 istio
-  shell: "{{ bin_dir }}/helm install --namespace istio-system --name istio --values {{ base_dir }}/manifests/istio/values.yaml {{ base_dir }}/manifests/istio/istio"
+#- name: helm 安装 istio
+#  shell: "{{ bin_dir }}/helm install --namespace istio-system --name istio --values {{ base_dir }}/manifests/istio/values.yaml {{ base_dir }}/manifests/istio/istio"
+
+- name: helm 制作 template
+  shell: "{{ bin_dir }}/helm template --namespace istio-system --name istio --values {{ base_dir }}/manifests/istio/values.yaml {{ base_dir }}/manifests/istio/istio > {{ base_dir }}/manifests/istio/istio-after-helm-template.yaml"
+
+- name: kubectl apply istio-after-helm-template
+  shell: "{{ bin_dir }}/kubectl apply -f {{ base_dir }}/manifests/istio/istio-after-helm-template.yaml"

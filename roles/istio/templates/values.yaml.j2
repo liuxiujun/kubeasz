@@ -1,3 +1,8 @@
+global:
+  proxy:
+    #只包含本k8s内的pod、svc网段
+    includeIPRanges: "{{ SERVICE_CIDR }},{{ CLUSTER_CIDR }}"
+
 gateways:
   istio-ingressgateway:
     type: NodePort

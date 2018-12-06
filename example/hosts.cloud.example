@@ -66,9 +66,14 @@ CLUSTER_KUBERNETES_SVC_IP="10.68.0.1"
 
 # 集群 DNS 服务 IP (从 SERVICE_CIDR 中预分配)
 CLUSTER_DNS_SVC_IP="10.68.0.2"
-
+#集群名称，用于内部dns，外部dns指向ingress的
+#例如：k8s-project
+#外部dns指向: xxxxx.k8s-project.mxnavi.com
+#内部dns名字: $serviceName.$namespace.k8s-project.cluster.local
+# TODO 如果新建立集群，需修改
+CLUSTER_NAME="demo"
 # 集群 DNS 域名
-CLUSTER_DNS_DOMAIN="cluster.local."
+CLUSTER_DNS_DOMAIN="{{ CLUSTER_NAME }}.cluster.local."
 
 # 集群basic auth 使用的用户名和密码
 BASIC_AUTH_USER="admin"

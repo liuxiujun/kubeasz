@@ -82,7 +82,7 @@ metadata:
     addonmanager.kubernetes.io/mode: Reconcile
     kubernetes.io/name: "CoreDNS"
 spec:
-  replicas: 2
+  replicas: 3
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -105,14 +105,15 @@ spec:
           operator: "Exists"
       containers:
       - name: coredns
-        image: coredns/coredns:1.2.2
+        #image: coredns/coredns:1.2.2
+        image: docker.mxnavi.com/k8s/coredns/coredns:1.2.2
         imagePullPolicy: IfNotPresent
         resources:
           limits:
-            memory: 170Mi
+            memory: 256Mi
           requests:
-            cpu: 100m
-            memory: 70Mi
+            cpu: 500m
+            memory: 256Mi
         args: [ "-conf", "/etc/coredns/Corefile" ]
         volumeMounts:
         - name: config-volume

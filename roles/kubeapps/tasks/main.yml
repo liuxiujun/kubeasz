@@ -2,7 +2,7 @@
   shell: "mkdir -p {{ base_dir }}/manifests/kubeapps/"
 
 - name: 下载 kubeapps
-  copy: src=kubeapps dest={{ base_dir }}/manifests/kubeapps/kubeapps
+  copy: src=kubeapps dest={{ base_dir }}/manifests/kubeapps/
 
 - name: 下载 kubeapps values
   copy: src=kubeapps.value dest={{ base_dir }}/manifests/kubeapps/kubeapps.value

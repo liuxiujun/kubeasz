@@ -5,7 +5,7 @@
   copy: src=kubeapps dest={{ base_dir }}/manifests/kubeapps/
 
 - name: 下载 kubeapps values
-  copy: src=kubeapps.value dest={{ base_dir }}/manifests/kubeapps/kubeapps.value
+  template: src=kubeapps.value.j2 dest={{ base_dir }}/manifests/kubeapps/kubeapps.value
 
 - name: helm 安装 kubeapps
   shell: "{{ bin_dir }}/helm install --name kubeapps --namespace kubeapps --values {{ base_dir }}/manifests/kubeapps/kubeapps.value {{ base_dir }}/manifests/kubeapps/kubeapps"

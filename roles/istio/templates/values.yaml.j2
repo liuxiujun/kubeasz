@@ -86,7 +86,7 @@ kiali:
     enabled: true
     ## Used to create an Ingress record.
     hosts:
-      - kiali.mxnavi.com
+      - kiali.istio.{{ CLUSTER_NAME }}.mxnavi.com
     annotations:
       # kubernetes.io/ingress.class: nginx
       # kubernetes.io/tls-acme: "true"

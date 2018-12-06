@@ -46,7 +46,11 @@ MASTER_IP="192.168.1.10"		# 即负载均衡内网地址
 KUBE_APISERVER="https://{{ MASTER_IP }}:8443"
 
 # 集群网络插件，目前支持calico, flannel, kube-router, cilium
-CLUSTER_NETWORK="flannel"
+CLUSTER_NETWORK="calico"
+# 如果是calico，是否需要支持IPIP模型[例如aliyun等IDC需要IPIP支持]
+# 设置 CALICO_IPV4POOL_IPIP=“off”,可以提高网络性能，条件限制详见 docs/06.calico.md
+# 设置 CALICO_IPV4POOL_IPIP=“always”，启动 IPIP 模式，支持各类云
+CALICO_IPV4POOL_IPIP="always"
 
 # 服务网段 (Service CIDR），注意不要与内网已有网段冲突
 SERVICE_CIDR="10.68.0.0/16"

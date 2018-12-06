@@ -6,4 +6,4 @@ PROXY_MODE: "ipvs"
 KUBELET_ROOT_DIR: "/var/lib/kubelet"
 
 # node节点最大pod 数
-MAX_PODS: 110
+MAX_PODS: 210

@@ -1,3 +1,6 @@
+global:
+  imageRegistry: docker.mxnavi.com/k8s
+
 ingress:
   enabled: true
   hosts:

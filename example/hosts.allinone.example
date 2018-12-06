@@ -32,8 +32,8 @@
 # Cluster Deployment Mode: allinone, single-master, multi-master
 DEPLOY_MODE=allinone
 
-# Versions supported: v1.8, v1.9, v1.10, v1.11, v1.12
-K8S_VER="v1.12"
+# Versions supported: v1.8, v1.9, v1.10, v1.11, v1.12, v1.13
+K8S_VER="v1.13"
 
 # Cluster's Master IP, auto generated
 MASTER_IP="{{ groups['kube-master'][0] }}"

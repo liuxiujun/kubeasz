@@ -6,6 +6,9 @@ ingress:
   hosts:
   - name: kubeapps.{{ CLUSTER_NAME }}.mxnavi.com
 
+tillerProxy:
+  host: tiller-deploy.{{ helm_namespace }}:44134
+
 apprepository:
   initialRepos:
   - name: mxnavi

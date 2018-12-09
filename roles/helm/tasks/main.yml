@@ -1,16 +1,18 @@
 - name: 下载helm客户端
   copy: src={{ base_dir }}/bin/helm dest={{ bin_dir }}/helm mode=0755
 
+- name: 建立helm路径
+  shell: mkdir -p {{ base_dir }}/manifests/helm-{{ helm_namespace }}
+
 - name: 准备rbac配置
-  template: src=helm-rbac.yaml.j2 dest=./helm-rbac.yaml
+  template: src=helm-rbac.yaml.j2 dest={{ base_dir }}/manifests/helm-{{ helm_namespace }}/helm-rbac.yaml.j2
 
 - name: 在k8s上创建rbac
-  shell: "{{ bin_dir }}/kubectl apply -f ./helm-rbac.yaml"
+  shell: "{{ bin_dir }}/kubectl apply -f {{ base_dir }}/manifests/helm-{{ helm_namespace }}/helm-rbac.yaml.j2"
   ignore_errors: true
 
 - name: 安装tiller
   shell: "{{ bin_dir }}/helm init \
-        --service-account {{ tiller_sa }} \
         --tiller-namespace {{ helm_namespace }} \
         --tiller-image {{ tiller_image }} \
         --stable-repo-url {{ repo_url }}"
@@ -25,7 +27,7 @@
 
 # helm 安装成功 使用 helm version
 - name: 轮询等待helm启动成功，视下载镜像速度而定
-  shell: "{{ bin_dir }}/kubectl get pod -n kube-system -o wide|grep tiller|awk '{print $3}'"
+  shell: "{{ bin_dir }}/kubectl get pod -n {{ helm_namespace }} -o wide|grep tiller|awk '{print $3}'"
   register: helm_status
   until: helm_status.stdout == "Running"
   delegate_to: "{{ groups.deploy[0] }}"

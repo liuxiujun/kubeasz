@@ -1,3 +1,5 @@
 - hosts: deploy
   roles:
   - kubeapps
+  vars:
+    helm_namespace: helm-system

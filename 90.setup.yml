@@ -95,6 +95,8 @@
 - hosts: deploy
   roles:
   - kubeapps
+  vars:
+    helm_namespace: helm-system
 
 # install rook ceph
 #- hosts: deploy

@@ -2,4 +2,4 @@
   roles:
   - kubeapps
   vars:
-    helm_namespace: helm-system
+    helm_namespace: kube-system

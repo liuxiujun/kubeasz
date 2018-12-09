@@ -5,17 +5,18 @@
   shell: mkdir -p {{ base_dir }}/manifests/helm-{{ helm_namespace }}
 
 - name: 准备rbac配置
-  template: src=helm-rbac.yaml.j2 dest={{ base_dir }}/manifests/helm-{{ helm_namespace }}/helm-rbac.yaml.j2
+  template: src=helm-rbac.yaml.j2 dest={{ base_dir }}/manifests/helm-{{ helm_namespace }}/helm-rbac.yaml
 
 - name: 在k8s上创建rbac
-  shell: "{{ bin_dir }}/kubectl apply -f {{ base_dir }}/manifests/helm-{{ helm_namespace }}/helm-rbac.yaml.j2"
+  shell: "{{ bin_dir }}/kubectl apply -f {{ base_dir }}/manifests/helm-{{ helm_namespace }}/helm-rbac.yaml"
   ignore_errors: true
 
 - name: 安装tiller
   shell: "{{ bin_dir }}/helm init \
         --tiller-namespace {{ helm_namespace }} \
         --tiller-image {{ tiller_image }} \
-        --stable-repo-url {{ repo_url }}"
+        --stable-repo-url {{ repo_url }} \
+        --service-account tiller-sa-{{ helm_namespace}}"
   ignore_errors: true
 
 - name: 添加 helm 命令自动补全

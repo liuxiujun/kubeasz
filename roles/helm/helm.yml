@@ -1,9 +1,8 @@
 - hosts: deploy
   roles:
   - helm
-#  vars:
-    #helm_namespace: helm-system
-#    helm_namespace: kube-system
+  vars:
+    helm_namespace: kube-system
 #    tiller_image: docker.mxnavi.com/k8s/tiller:v2.11.0
     # 如果默认官方repo 网络访问不稳定可以使用如下的阿里云镜像repo
     #repo_url: https://kubernetes.oss-cn-hangzhou.aliyuncs.com/charts

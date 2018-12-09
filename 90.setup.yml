@@ -79,7 +79,7 @@
   roles:
   - helm
   vars:
-    helm_namespace: helm-system
+    helm_namespace: kube-system
 
 # install nginx ingress
 - hosts: deploy

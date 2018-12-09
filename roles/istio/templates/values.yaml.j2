@@ -1,4 +1,8 @@
 global:
+  hub: docker.mxnavi.com/k8s/istio
+  hyperkube:
+    hub: docker.mxnavi.com/k8s/coreos
+    tag: v1.7.6_coreos.0
   proxy:
     #只包含本k8s内的pod、svc网段
     includeIPRanges: "{{ SERVICE_CIDR }},{{ CLUSTER_CIDR }}"
@@ -16,6 +20,8 @@ galley:
 
 tracing:
   enabled: false
+  jaeger:
+    hub: docker.mxnavi.com/k8s/jaegertracing
 
 servicegraph:
   enabled: false
@@ -62,6 +68,7 @@ pilot:
 
 prometheus:
   enabled: true
+  hub: docker.mxnavi.com/k8s/prom
   security:
     enabled: false
     adminUser: admin
@@ -69,12 +76,14 @@ prometheus:
 
 grafana:
   enabled: true
+  image:
+    repository: docker.mxnavi.com/k8s/grafana/grafana
   persist: false
   storageClassName: ""
 
 kiali:
   enabled: true
-  hub: docker.io/kiali
+  hub: docker.mxnavi.com/k8s/kiali
   tag: v0.11.0
   ingress:
     enabled: true

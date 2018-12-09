@@ -62,10 +62,6 @@ pilot:
 
 prometheus:
   enabled: true
-  service:
-    nodePort:
-      enabled: true
-      port: 32090
   security:
     enabled: false
     adminUser: admin
@@ -75,34 +71,18 @@ grafana:
   enabled: true
   persist: false
   storageClassName: ""
-  service:
-    type: NodePort
 
 kiali:
   enabled: true
   hub: docker.io/kiali
-  tag: v0.9
+  tag: v0.11.0
   ingress:
     enabled: true
-    ## Used to create an Ingress record.
     hosts:
       - kiali.istio.{{ CLUSTER_NAME }}.mxnavi.com
-    annotations:
-      # kubernetes.io/ingress.class: nginx
-      # kubernetes.io/tls-acme: "true"
-    tls:
-      # Secrets must be manually created in the namespace.
-      # - secretName: kiali-tls
-      #   hosts:
-      #     - kiali.local
   dashboard:
     username: admin
-    # Default admin passphrase for kiali. Must be set during setup, and
-    # changed by overriding the secret
     passphrase: mxnavi
-
-    # Override the automatically detected Grafana URL, usefull when Grafana service has no ExternalIPs
     grafanaURL: http://grafana:3000
-
     # Override the automatically detected Jaeger URL, usefull when Jaeger service has no ExternalIPs
     # jaegerURL: http://jaeger-query:16686

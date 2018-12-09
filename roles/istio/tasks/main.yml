@@ -24,3 +24,9 @@
 
 - name: kubectl apply istio-after-helm-template
   shell: "{{ bin_dir }}/kubectl apply -f {{ base_dir }}/manifests/istio/istio-after-helm-template.yaml"
+
+- name: 下载 ingress
+  template: src=ingress.yaml.j2 dest={{ base_dir }}/manifests/istio/ingress.yaml
+
+- name: 创建ingress访问
+  shell: "{{ bin_dir }}/kubectl apply -f {{ base_dir }}/manifests/istio/ingress.yaml"

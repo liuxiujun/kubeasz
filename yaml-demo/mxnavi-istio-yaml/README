@@ -1,0 +1,10 @@
+#参见：https://istio.io/zh/docs/tasks/traffic-management/
+
+https://istio.io/zh/docs/tasks/traffic-management/request-routing/
+05.x: 请求路由控制，控制流量到 v1、v2、v3 版本
+
+https://istio.io/zh/docs/tasks/traffic-management/fault-injection/
+06.x: 故障注入，将 jason 请求变慢，变成故障
+
+
+07.x: TODO

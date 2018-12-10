@@ -1,0 +1,37 @@
+# Default values for nfs-client-provisioner.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 2
+strategyType: Recreate
+
+image:
+  repository: docker.mxnavi.com/k8s/external_storage/nfs-client-provisioner
+  tag: v3.1.0-k8s1.11
+
+nfs:
+  server: {{ storage.nfs.server }}
+  path: {{ storage.nfs.server_path }}
+  mountOptions:
+
+# For creating the StorageClass automatically:
+storageClass:
+  provisionerName: {{ storage.nfs.server.replace(".","-") }}{{ storage.nfs.server_path.replace("/","-") }}
+
+  # Set a StorageClass name
+  # Ignored if storageClass.create is false
+  name: {{ storage.nfs.server.replace(".","-") }}{{ storage.nfs.server_path.replace("/","-") }}
+
+  # Method used to reclaim an obsoleted volume
+  reclaimPolicy: Delete
+
+  # When set to false your PVs will not be archived by the provisioner upon deletion of the PVC.
+  archiveOnDelete: true
+
+resources:
+   limits:
+    cpu: 100m
+    memory: 128Mi
+   requests:
+    cpu: 100m
+    memory: 128Mi

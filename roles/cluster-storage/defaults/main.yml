@@ -3,10 +3,8 @@ storage:
   # nfs server 参数
   nfs:
     enabled: "no"
-    server: "172.16.3.86"
-    server_path: "/data/nfs"
-    storage_class: "nfs-dynamic-class"
-    provisioner_name: "nfs-provisioner-01"
+    server: "127.0.0.1"
+    server_path: "/nfs-data"
 
   # aliyun_nas 参数
   aliyun_nas:

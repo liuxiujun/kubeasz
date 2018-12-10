@@ -1,10 +1,20 @@
 - name: 准备nfs-client 配置目录
-  file: name={{ base_dir }}/manifests/storage/nfs state=directory
+  file: "name={{ base_dir }}/manifests/storage/nfs/{{ storage.nfs.server.replace('.','-') }}{{ storage.nfs.server_path.replace('/','-') }} state=directory"
 
-- name: 生成nfs-client动态存储配置
+- name: 准备nfs helm chart
+  copy: "src=nfs-client-provisioner dest={{ base_dir }}/manifests/storage/nfs/{{ storage.nfs.server.replace('.','-') }}{{ storage.nfs.server_path.replace('/','-') }}"
+
+- name: 准备helm values
   template:
-    src: nfs/nfs-client-provisioner.yaml.j2
-    dest: "{{ base_dir }}/manifests/storage/nfs/{{ storage.nfs.provisioner_name }}.yaml"
+    src: nfs/values.yaml.j2
+    dest: "{{ base_dir }}/manifests/storage/nfs/{{ storage.nfs.server.replace('.','-') }}{{ storage.nfs.server_path.replace('/','-') }}/values.yaml"
 
-- name: 开始部署nfs-client动态存储
-  shell: "{{ bin_dir }}/kubectl apply -f {{ base_dir }}/manifests/storage/nfs/{{ storage.nfs.provisioner_name }}.yaml"
+- name: 创建nfs-storage namespace
+  shell: "{{ bin_dir }}/kubectl create namespace nfs-storage"
+  ignore_errors: true
+
+- name: helm template 准备
+  shell: "{{ bin_dir }}/helm template --namespace nfs-storage --name nfs-{{ storage.nfs.server.replace('.','-') }}{{ storage.nfs.server_path.replace('/','-') }} --values {{ base_dir }}/manifests/storage/nfs/{{ storage.nfs.server.replace('.','-') }}{{ storage.nfs.server_path.replace('/','-') }}/values.yaml {{ base_dir }}/manifests/storage/nfs/{{ storage.nfs.server.replace('.','-') }}{{ storage.nfs.server_path.replace('/','-') }}/nfs-client-provisioner > {{ base_dir }}/manifests/storage/nfs/{{ storage.nfs.server.replace('.','-') }}{{ storage.nfs.server_path.replace('/','-') }}/after-helm-template-install.yaml"
+
+- name: 增加kubectl 安装
+  shell: "{{ bin_dir }}/kubectl apply -n nfs-storage -f {{ base_dir }}/manifests/storage/nfs/{{ storage.nfs.server.replace('.','-') }}{{ storage.nfs.server_path.replace('/','-') }}/after-helm-template-install.yaml"

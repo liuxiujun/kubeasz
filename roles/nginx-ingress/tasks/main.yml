@@ -8,8 +8,15 @@
 - name: 下载nginx ingress values
   template: src=values.yaml.j2 dest={{ base_dir }}/manifests/nginx-ingress/values.yaml
 
-- name: helm 安装 nginx ingress
-  shell: "{{ bin_dir }}/helm install --namespace nginx-ingress --name nginx-ingress --values {{ base_dir }}/manifests/nginx-ingress/values.yaml {{ base_dir }}/manifests/nginx-ingress/nginx-ingress"
+- name: helm template nginx ingress
+  shell: "{{ bin_dir }}/helm template --namespace nginx-ingress --name nginx-ingress --values {{ base_dir }}/manifests/nginx-ingress/values.yaml {{ base_dir }}/manifests/nginx-ingress/nginx-ingress > {{ base_dir }}/manifests/nginx-ingress/after-helm-template.yaml"
+
+- name: kubectl create namespace
+  shell: "{{ bin_dir }}/kubectl create namespace nginx-ingress "
+  ignore_errors: true
+
+- name: kubectl apply nginx ingress
+  shell: "{{ bin_dir }}/kubectl apply -n nginx-ingress -f {{ base_dir }}/manifests/nginx-ingress/after-helm-template.yaml"
 
 - name: 非multi-master安装方式，deploy master机器作为nginx主机
   shell: "{{ bin_dir }}/kubectl label nodes {{ inventory_hostname }} role=nginx-ingress --overwrite=true"

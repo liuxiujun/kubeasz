@@ -115,7 +115,8 @@ spec:
         # container programs network policy and routes on each
         # host.
         - name: calico-node
-          image: calico/node:{{ calico_node_ver }}
+          #image: calico/node:{{ calico_node_ver }}
+          image: docker.mxnavi.com/k8s/calico/node:{{ calico_node_ver }}
           env:
             # The location of the Calico etcd cluster.
             - name: ETCD_ENDPOINTS
@@ -227,7 +228,8 @@ spec:
         # This container installs the Calico CNI binaries
         # and CNI network config file on each node.
         - name: install-cni
-          image: calico/cni:{{ calico_cni_ver }}
+          #image: calico/cni:{{ calico_cni_ver }}
+          image: docker.mxnavi.com/k8s/calico/cni:{{ calico_cni_ver }}
           command: ["/install-cni.sh"]
           env:
             # Name of the CNI config file to create.
@@ -332,7 +334,8 @@ spec:
       serviceAccountName: calico-kube-controllers
       containers:
         - name: calico-kube-controllers
-          image: calico/kube-controllers:{{ calico_kube_controller_ver }}
+          #image: calico/kube-controllers:{{ calico_kube_controller_ver }}
+          image: docker.mxnavi.com/k8s/calico/kube-controllers:{{ calico_kube_controller_ver }}
           env:
             # The location of the Calico etcd cluster.
             - name: ETCD_ENDPOINTS

@@ -14,9 +14,6 @@ global:
   #policy模块可以失败
   policyCheckFailOpen: true
 
-#security:
-#  enabled: false
-
 ingress:
   enabled: false
 
@@ -29,14 +26,11 @@ gateways:
 galley:
   enabled: false
 
-#sidecarInjectorWebhook:
-#  enabled: false
+pilot:
+  sidecar: false
 
 mixer:
   enabled: false
 
 prometheus:
   enabled: false
-
-pilot:
-  sidecar: false

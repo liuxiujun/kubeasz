@@ -33,6 +33,8 @@
 
 - name: 删除istio mix rule中的 stdio 标准输出流打印功能
   shell: "{{ bin_dir }}/kubectl delete -n istio-system rule stdio"
+  ignore_errors: true
 
 - name: 删除istio mix rule中的 stdiotcp 标准输出流打印功能
   shell: "{{ bin_dir }}/kubectl delete -n istio-system rule stdiotcp"
+  ignore_errors: true

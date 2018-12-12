@@ -26,7 +26,7 @@
 [nfs-server]
 192.168.1.4
 
-[nginx-node]
+[nginx]
 192.168.1.3
 
 # variable NEW_INSTALL: 'yes' to setup a new harbor server; 'no' to integrate with existed one

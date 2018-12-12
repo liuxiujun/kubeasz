@@ -30,3 +30,9 @@
 
 - name: 创建ingress访问
   shell: "{{ bin_dir }}/kubectl apply -f {{ base_dir }}/manifests/istio/ingress.yaml"
+
+- name: 删除istio mix rule中的 stdio 标准输出流打印功能
+  shell: "{{ bin_dir }}/kubectl delete -n istio-system rule stdio"
+
+- name: 删除istio mix rule中的 stdiotcp 标准输出流打印功能
+  shell: "{{ bin_dir }}/kubectl delete -n istio-system rule stdiotcp"

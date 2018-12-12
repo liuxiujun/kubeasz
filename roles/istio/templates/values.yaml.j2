@@ -6,31 +6,92 @@ global:
   proxy:
     #只包含本k8s内的pod、svc网段
     includeIPRanges: "{{ SERVICE_CIDR }},{{ CLUSTER_CIDR }}"
-    envoyStatsd:
-      enabled: false
-    
   #取消policy前置检查
   disablePolicyChecks: true
   #policy模块可以失败
   policyCheckFailOpen: true
 
-ingress:
-  enabled: false
 
 gateways:
-  istio-ingressgateway:
-    enabled: false
-  istio-egressgateway:
-    enabled: false
+  enabled: false
 
 galley:
   enabled: false
 
-pilot:
-  sidecar: false
-
-mixer:
+tracing:
   enabled: false
+  jaeger:
+    hub: docker.mxnavi.com/k8s/jaegertracing
+
+servicegraph:
+  enabled: false
+
+#
+# mixer configuration
+#
+mixer:
+  enabled: true
+  replicaCount: 3
+  autoscaleMin: 3
+  autoscaleMax: 10
+
+  istio-policy:
+    autoscaleEnabled: true
+    autoscaleMin: 3
+    autoscaleMax: 10
+    cpu:
+      targetAverageUtilization: 80
+
+  istio-telemetry:
+    autoscaleEnabled: true
+    autoscaleMin: 3
+    autoscaleMax: 10
+    cpu:
+      targetAverageUtilization: 80
+
+#
+# pilot configuration
+#
+pilot:
+  enabled: true
+  replicaCount: 2
+  autoscaleMin: 2
+  autoscaleMax: 8
+  image: pilot
+  # Resources for a small pilot install
+  resources:
+    requests:
+      cpu: 500m
+      memory: 2048Mi
+  cpu:
+    targetAverageUtilization: 80
 
 prometheus:
-  enabled: false
+  enabled: true
+  hub: docker.mxnavi.com/k8s/prom
+  security:
+    enabled: false
+    adminUser: admin
+    adminPassword: mxnavi
+
+grafana:
+  enabled: true
+  image:
+    repository: docker.mxnavi.com/k8s/grafana/grafana
+  persist: false
+  storageClassName: ""
+
+kiali:
+  enabled: true
+  hub: docker.mxnavi.com/k8s/kiali
+  tag: v0.11.0
+  ingress:
+    enabled: true
+    hosts:
+      - kiali.istio.{{ CLUSTER_NAME }}.mxnavi.com
+  dashboard:
+    username: admin
+    passphrase: mxnavi
+    grafanaURL: http://grafana:3000
+    # Override the automatically detected Jaeger URL, usefull when Jaeger service has no ExternalIPs
+    # jaegerURL: http://jaeger-query:16686

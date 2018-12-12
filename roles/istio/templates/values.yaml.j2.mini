@@ -1,0 +1,36 @@
+global:
+  hub: docker.mxnavi.com/k8s/istio
+  hyperkube:
+    hub: docker.mxnavi.com/k8s/coreos
+    tag: v1.7.6_coreos.0
+  proxy:
+    #只包含本k8s内的pod、svc网段
+    includeIPRanges: "{{ SERVICE_CIDR }},{{ CLUSTER_CIDR }}"
+    envoyStatsd:
+      enabled: false
+    
+  #取消policy前置检查
+  disablePolicyChecks: true
+  #policy模块可以失败
+  policyCheckFailOpen: true
+
+ingress:
+  enabled: false
+
+gateways:
+  istio-ingressgateway:
+    enabled: false
+  istio-egressgateway:
+    enabled: false
+
+galley:
+  enabled: false
+
+pilot:
+  sidecar: false
+
+mixer:
+  enabled: false
+
+prometheus:
+  enabled: false

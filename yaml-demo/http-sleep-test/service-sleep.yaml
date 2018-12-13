@@ -1,0 +1,48 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: service-sleep
+spec:
+  ports:
+    - port: 8000
+  selector:
+    app: service-sleep
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: service-sleep
+spec:
+  rules:
+  - host: service-sleep.mxnavi.com
+    http:
+      paths:
+      - backend:
+          serviceName: service-sleep
+          servicePort: 8000
+---
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: service-sleep
+spec:
+  selector:
+    matchLabels:
+      app: service-sleep
+  replicas: 1 # tells deployment to run 2 pods matching the template
+  template:
+    metadata:
+      labels:
+        app: service-sleep
+    spec:
+      containers:
+      - name: app
+        image: docker.mxnavi.com/k8s/sleep_server:1.0
+        command:
+        - /start.sh
+        env:
+        - name: time
+          value: "3"
+        ports:
+        - containerPort: 8000

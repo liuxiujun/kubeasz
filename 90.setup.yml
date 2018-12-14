@@ -84,7 +84,7 @@
 # install nginx ingress
 - hosts: deploy
   roles:
-  - nginx-ingress
+  - nginx-ingress-port
   vars:
     controller_image_repository: docker.mxnavi.com/k8s/nginx-ingress-controller
     controller_image_tag: 0.19.0

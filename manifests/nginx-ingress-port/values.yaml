@@ -19,22 +19,6 @@ controller:
      proxy-read-timeout: "3600"
      proxy-send-timeout: "3600"
 
-  tolerations:
-    - key: "nginx-ingress"
-      operator: "Equal"
-      value: "true"
-      effect: "NoSchedule"
-
-  affinity:
-    nodeAffinity:
-      requiredDuringSchedulingIgnoredDuringExecution:
-        nodeSelectorTerms:
-          - matchExpressions:
-            - key: role
-              operator: In
-              values:
-              - nginx-ingress
-
   resources:
     limits:
       cpu: 2

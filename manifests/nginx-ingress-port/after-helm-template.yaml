@@ -311,22 +311,6 @@ spec:
               memory: 2048Mi
             
       hostNetwork: false
-      tolerations:
-        - effect: NoSchedule
-          key: nginx-ingress
-          operator: Equal
-          value: "true"
-        
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-            - matchExpressions:
-              - key: role
-                operator: In
-                values:
-                - nginx-ingress
-        
       serviceAccountName: nginx-ingress-port
       terminationGracePeriodSeconds: 60
 

@@ -10,4 +10,4 @@ ROUTER_ID: 111
 BALANCE_ALG: "roundrobin"
 
 # 启用 ingress NodePort服务的负载均衡 (yes/no)
-INGRESS_NODEPORT_LB: "no"
+INGRESS_NODEPORT_LB: "yes"

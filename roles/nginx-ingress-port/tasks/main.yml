@@ -1,0 +1,28 @@
+- name: 建立nginx ingress 目录
+  shell: mkdir -p {{ base_dir }}/manifests/nginx-ingress-port/nginx-ingress
+  ignore_errors: true
+
+- name: 下载nginx ingress helm package
+  copy: src=nginx-ingress/ dest={{ base_dir }}/manifests/nginx-ingress-port/nginx-ingress
+
+- name: 下载nginx ingress values
+  template: src=values.yaml.j2 dest={{ base_dir }}/manifests/nginx-ingress-port/values.yaml
+
+- name: helm template nginx ingress
+  shell: "{{ bin_dir }}/helm template --namespace nginx-ingress-port --name nginx-ingress-port --values {{ base_dir }}/manifests/nginx-ingress-port/values.yaml {{ base_dir }}/manifests/nginx-ingress-port/nginx-ingress > {{ base_dir }}/manifests/nginx-ingress-port/after-helm-template.yaml"
+
+- name: kubectl create namespace
+  shell: "{{ bin_dir }}/kubectl create namespace nginx-ingress-port "
+  ignore_errors: true
+
+- name: kubectl apply nginx ingress
+  shell: "{{ bin_dir }}/kubectl apply -n nginx-ingress-port -f {{ base_dir }}/manifests/nginx-ingress-port/after-helm-template.yaml"
+
+- name: 非multi-master安装方式，deploy master机器作为nginx主机
+  shell: "{{ bin_dir }}/kubectl label nodes {{ inventory_hostname }} role=nginx-ingress --overwrite=true"
+  delegate_to: "{{ groups.deploy[0] }}"
+  when: DEPLOY_MODE != "multi-master"
+
+- name: multi-master安装方式，需要定义独享的nginx节点
+  shell: "{{ bin_dir }}/kubectl label nodes {{ groups.nginx[0] }} role=nginx-ingress --overwrite=true"
+  when: DEPLOY_MODE == "multi-master"

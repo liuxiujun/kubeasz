@@ -1,0 +1,49 @@
+rbac:
+  create: true
+
+controller:
+  image:
+    repository: {{ controller_image_repository }}
+    tag: {{ controller_image_tag }}
+  dnsPolicy: ClusterFirstWithHostNet
+  service:
+    type: NodePort
+    nodePorts:
+       http: 32080
+       https: 32443
+  #https://github.com/kubernetes/ingress-nginx/blob/master/docs/user-guide/nginx-configuration/configmap.md#proxy-read-timeout
+  config:
+     client-header-timeout: "3600"
+     client-body-timeout: "3600"
+     proxy-connect-timeout: "30"
+     proxy-read-timeout: "3600"
+     proxy-send-timeout: "3600"
+
+  tolerations:
+    - key: "nginx-ingress"
+      operator: "Equal"
+      value: "true"
+      effect: "NoSchedule"
+
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+            - key: role
+              operator: In
+              values:
+              - nginx-ingress
+
+  resources:
+    limits:
+      cpu: 2
+      memory: 2048Mi
+    requests:
+      cpu: 2
+      memory: 2048Mi
+
+defaultBackend:
+  image:
+    repository: {{ defaultBackend_image_repository }}
+    tag: {{ defaultBackend_image_tag }}

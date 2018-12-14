@@ -28,15 +28,28 @@ listen kube-master
 {% endfor %}
 {% if INGRESS_NODEPORT_LB == "yes" %}
 
-listen ingress-node
+listen ingress-node-http
 	bind 0.0.0.0:80
 	mode tcp
         option tcplog
         balance {{ BALANCE_ALG }}
 {% for host in groups['kube-node'] %}
-        server {{ host }} {{ host }}:23456 check inter 2000 fall 2 rise 2 weight 1
+        server {{ host }} {{ host }}:32080 check inter 2000 fall 2 rise 2 weight 1
 {% endfor %}
 {% for host in groups['new-node'] %}
-        server {{ host }} {{ host }}:23456 check inter 2000 fall 2 rise 2 weight 1
+        server {{ host }} {{ host }}:32080 check inter 2000 fall 2 rise 2 weight 1
 {% endfor %}
+
+listen ingress-node-https
+        bind 0.0.0.0:443
+        mode tcp
+        option tcplog
+        balance {{ BALANCE_ALG }}
+{% for host in groups['kube-node'] %}
+        server {{ host }} {{ host }}:32443 check inter 2000 fall 2 rise 2 weight 1
+{% endfor %}
+{% for host in groups['new-node'] %}
+        server {{ host }} {{ host }}:32443 check inter 2000 fall 2 rise 2 weight 1
+{% endfor %}
+
 {% endif %}

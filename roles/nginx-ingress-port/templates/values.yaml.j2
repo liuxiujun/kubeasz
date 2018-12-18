@@ -33,3 +33,10 @@ defaultBackend:
   image:
     repository: {{ defaultBackend_image_repository }}
     tag: {{ defaultBackend_image_tag }}
+  resources:
+    limits:
+      cpu: 2
+      memory: 2048Mi
+    requests:
+      cpu: 2
+      memory: 2048Mi

@@ -19,6 +19,7 @@ controller:
      proxy-read-timeout: "3600"
      proxy-send-timeout: "3600"
      proxy-body-size: "100m"
+     client-body-buffer-size: "1024k"
 
   tolerations:
     - key: "nginx-ingress"
@@ -48,3 +49,10 @@ defaultBackend:
   image:
     repository: {{ defaultBackend_image_repository }}
     tag: {{ defaultBackend_image_tag }}
+  resources:
+    limits:
+      cpu: 2
+      memory: 2048Mi
+    requests:
+      cpu: 2
+      memory: 2048Mi

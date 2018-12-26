@@ -16,7 +16,9 @@ start-stop-daemon --make-pidfile --name kube-proxy --background --start --pidfil
   --hostname-override={{ inventory_hostname }} \
   --kubeconfig=/etc/kubernetes/kube-proxy.kubeconfig \
   --logtostderr=true \
-  --proxy-mode={{ PROXY_MODE }}
+  --proxy-mode={{ PROXY_MODE }} \
+  --ipvs-min-sync-period=30s \
+  --ipvs-sync-period=60s
         ;;
   status)
      status_of_proc -p /var/run/kube-proxy.pid {{ bin_dir }}/kube-proxy "kube-proxy"

@@ -13,8 +13,8 @@ ExecStart={{ bin_dir }}/kube-proxy \
   --kubeconfig=/etc/kubernetes/kube-proxy.kubeconfig \
   --logtostderr=true \
   --proxy-mode={{ PROXY_MODE }} \
-  --ipvs-min-sync-period=30s \
-  --ipvs-sync-period=60s
+  --ipvs-min-sync-period=5s \
+  --ipvs-sync-period=5s
 
 Restart=on-failure
 RestartSec=5

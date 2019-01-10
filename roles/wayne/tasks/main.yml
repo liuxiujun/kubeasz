@@ -1,0 +1,17 @@
+- name: 建立 wayne 目录
+  shell: mkdir -p {{ base_dir }}/manifests/wayne/wayne
+  ignore_errors: true
+
+- name: 下载 wayne yaml
+  copy: src=wayne/ dest={{ base_dir }}/manifests/wayne/wayne
+
+
+- name: kubectl create namespace
+  shell: "{{ bin_dir }}/kubectl create namespace wayne"
+  ignore_errors: true
+
+- name: kubectl 应用 dependency
+  shell: "{{ bin_dir }}/kubectl apply -n wayne -f {{ base_dir }}/manifests/wayne/wayne/dependency"
+
+- name: kubectl 应用 wayne
+  shell: "{{ bin_dir }}/kubectl apply -n wayne -f {{ base_dir }}/manifests/wayne/wayne/wayne"

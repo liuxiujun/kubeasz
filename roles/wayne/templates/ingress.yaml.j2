@@ -1,0 +1,12 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: infra-wayne
+spec:
+  rules:
+  - host: wayne.{{ CLUSTER_NAME }}.mxnavi.com
+    http:
+      paths:
+      - backend:
+          serviceName: infra-wayne
+          servicePort: 8080

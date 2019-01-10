@@ -5,13 +5,37 @@
 - name: 下载 wayne yaml
   copy: src=wayne/ dest={{ base_dir }}/manifests/wayne/wayne
 
-
 - name: kubectl create namespace
   shell: "{{ bin_dir }}/kubectl create namespace wayne"
   ignore_errors: true
 
-- name: kubectl 应用 dependency
-  shell: "{{ bin_dir }}/kubectl apply -n wayne -f {{ base_dir }}/manifests/wayne/wayne/dependency"
+- name: kubectl 应用 dependency mysql
+  shell: "{{ bin_dir }}/kubectl apply -n wayne -f {{ base_dir }}/manifests/wayne/wayne/dependency/mysql.yaml"
+  when: mysql_dependency_create == true
+
+- name: kubectl 应用 dependency mq
+  shell: "{{ bin_dir }}/kubectl apply -n wayne -f {{ base_dir }}/manifests/wayne/wayne/dependency/rabbitmq.yaml"
+  when: mq_dependency_create == true
+
+- name: 生成 wayne 各类配置文件
+  template: src=configmap.yaml.j2 dest={{ base_dir }}/manifests/wayne/wayne/configmap.yaml
+
+- name: 生成 wayne 各类配置文件
+  template: src=deployment.yaml.j2 dest={{ base_dir }}/manifests/wayne/wayne/deployment.yaml
+
+- name: 生成 wayne 各类配置文件
+  template: src=ingress.yaml.j2 dest={{ base_dir }}/manifests/wayne/wayne/ingress.yaml
+
+- name: 生成 wayne 各类配置文件
+  template: src=deployment-worker.yaml.j2 dest={{ base_dir }}/manifests/wayne/wayne/deployment-worker.yaml
+  when: worker_enable == true
+
+- name: 生成 wayne 各类配置文件
+  template: src=deployment-webhook.yaml.j2 dest={{ base_dir }}/manifests/wayne/wayne/deployment-webhook.yaml
+  when: worker_enable == true
+
+- name: 生成 wayne 各类配置文件
+  template: src=service.yaml.j2 dest={{ base_dir }}/manifests/wayne/wayne/service.yaml
 
 - name: kubectl 应用 wayne
-  shell: "{{ bin_dir }}/kubectl apply -n wayne -f {{ base_dir }}/manifests/wayne/wayne/wayne"
+  shell: "{{ bin_dir }}/kubectl apply -n wayne -f {{ base_dir }}/manifests/wayne/wayne/"

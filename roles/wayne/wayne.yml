@@ -1,3 +1,16 @@
 - hosts: deploy
   roles:
   - wayne
+  vars:
+    wayne_image: docker-ali.mxnavi.com/aliyun/360cloud/wayne:v1.2.1-117-g06077e7
+    service_type: ClusterIP
+    mysql_dependency_create: true
+    wayne_mysql_host_with_port: tcp(mysql-wayne:3306)
+    wayne_mysql_database: wayne
+    wayne_mysql_user: "root"
+    wayne_mysql_password: "root"
+    mq_dependency_create: false
+    BusEnable: false
+    BusRabbitMQURL: amqp://guest:guest@rabbitmq-wayne:5672
+    webhook_enable: false
+    worker_enable: false

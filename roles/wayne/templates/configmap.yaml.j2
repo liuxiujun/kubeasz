@@ -31,10 +31,10 @@ data:
 
     # database configuration:
     ## mysql
-    DBName = "wayne"
-    DBTns = "tcp(mysql-wayne:3306)"
-    DBUser = "root"
-    DBPasswd = "root"
+    DBName = "{{ wayne_mysql_database }}"
+    DBTns = "{{ wayne_mysql_host_with_port }}"
+    DBUser = "{{ wayne_mysql_user }}"
+    DBPasswd = "{{ wayne_mysql_password }}"
     DBLoc = "Asia%2FShanghai"
     DBConnTTL = 30
 
@@ -58,8 +58,8 @@ data:
     EnableApiKeys = true
 
     # Bus
-    BusEnable = true
-    BusRabbitMQURL = "amqp://guest:guest@rabbitmq-wayne:5672"
+    BusEnable = {{ BusEnable }}
+    BusRabbitMQURL = "{{ BusRabbitMQURL }}"
 
     # Webhook
     EnableWebhook = true

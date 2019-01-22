@@ -1,0 +1,32 @@
+- name: add nfs hosts to /etc/hosts
+  shell: echo "{{ nfs_ha_master_ip }}	{{ nfs_ha_master_uname }}" >> /etc/hosts && echo "{{ nfs_ha_slave_ip }}   {{ nfs_ha_slave_uname }}" >>/etc/hosts
+
+- name: update sources.list
+  template: src=sources.list.j2 dest=/etc/apt/sources.list
+
+- name: install drbd
+  apt:
+    name: drbd8-utils
+    state: present
+- name: disable drbd in systemd
+  shell: systemctl disable drbd
+
+- name: install nfs-kernel-server
+  apt:
+    name: nfs-kernel-server
+    state: present
+
+- name: disalbe all nfs daemons in systemd
+  shell: systemctl stop nfs-blkmap.service nfs-config.service nfs-mountd.service nfs-blkmap.target nfs-idmapd.service nfs-server.service nfs-client.target nfs-kernel-server.service nfs-utils.service && systemctl disable nfs-blkmap.service nfs-config.service nfs-mountd.service nfs-blkmap.target nfs-idmapd.service nfs-server.service nfs-client.target nfs-kernel-server.service nfs-utils.service
+
+- name: config export
+  shell: echo "/nfs-data *(rw,async,insecure,no_subtree_check,no_root_squash)" >> /etc/exports
+
+- name: copy drbd.conf
+  template: src=drbd.conf.j2 dest=/etc/drbd.conf
+
+- name: create nfs export dir
+  file:
+    path: /nfs-data
+    state: directory
+    mode: 0755

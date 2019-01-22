@@ -1,0 +1,30 @@
+- name: add_docker_ubuntu_1404_mirrors_key
+  shell: 'wget -q -O- "http://mirrors-docker-1404.mxnavi.com/apt/gpg" | apt-key add -'
+  
+- name: change-source-docker
+  copy: src=docker.list dest=/etc/apt/sources.list.d/docker.list
+  
+- name: apt-get-update-docker-sources
+  shell: apt-get update
+  
+- name: install apparmor
+  package:
+    name: apparmor
+    state: present
+    
+- name: update-grub-add-cgroup-enable
+  copy: src=default-grub-1404 dest=/etc/default/grub
+  
+- name: update-grub-for-cgroup-enable
+  shell: update-grub
+  
+- name: install-docker
+  package:
+    name: docker-engine=1.11.2-0~trusty
+    state: present
+    
+- name: docker config
+  copy: src=docker.default dest=/etc/default/docker
+ 
+- name: restart docker
+  shell: service docker restart

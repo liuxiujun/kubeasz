@@ -1,0 +1,49 @@
+totem {
+        version: 2
+        cluster_name: debian
+        secauth: off
+        transport: udpu
+        interface {
+                ringnumber: 0
+                bindnetaddr: {{ corosync_bindnet }}
+                broadcast: yes
+                mcastport: 5405
+                ttl: 1
+        }
+}
+
+#logging {
+#       fileline: off
+#       to_stderr: no
+#       to_logfile: no
+#       to_syslog: yes
+#       syslog_facility: daemon
+#       debug: off
+#       timestamp: on
+#       logger_subsys {
+#               subsys: QUORUM
+#               debug: off
+#       }
+#}
+
+nodelist {
+        node {
+                ring0_addr: {{ nfs_ha_master_ip }}
+                name: {{ nfs_ha_master_uname }}
+                nodeid:1
+        }
+        node {
+                ring0_addr: {{ nfs_ha_slave_ip }}
+                name: {{ nfs_ha_slave_uname }}
+                nodeid:2
+        }
+}
+
+quorum {
+        provider: corosync_votequorum
+        two_node: 1
+        wait_for_all: 1
+        last_man_standing: 1
+        auto_tie_breaker: 0
+}
+

@@ -1,0 +1,51 @@
+- name: install pacemaker
+  apt:
+    name: pacemaker
+    state: present
+
+- name: install pacemaker-common
+  apt:
+    name: pacemaker-common
+    state: present
+
+- name: install pacemaker-cli-utils
+  apt:
+    name: pacemaker-cli-utils
+    state: present
+
+- name: install pacemaker-resource-agents -y
+  apt:
+    name: pacemaker-resource-agents
+    state: present
+
+- name: stop and enable pacemaker in systemd
+  shell: systemctl stop pacemaker 
+  ignore_errors: yes
+  no_log: True
+
+- name: stop and enable corosync in systemd
+  shell: systemctl stop corosync && systemctl enable corosync
+  ignore_errors: yes
+  no_log: True
+
+- name: copy corosync.conf
+  template: src=corosync.conf.j2 dest=/etc/corosync/corosync.conf
+
+- name: start corosync
+  shell: systemctl start corosync
+
+- name: start pacemaker
+  shell: systemctl start pacemaker
+
+- name: pacemaker cib config file
+  template: src=cib.config.j2 dest=/root/cib.config
+
+- name: commit config change
+  shell: crm configure load update /root/cib.config && crm configure commit
+  ignore_errors: yes
+  no_log: True
+
+- name: clear tmp files
+  file:
+    state: absent
+    path: /root/cib.config

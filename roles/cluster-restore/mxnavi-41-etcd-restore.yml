@@ -1,0 +1,5 @@
+# to restore data of etcd cluster
+- hosts: etcd
+  roles:
+  - cluster-restore
+

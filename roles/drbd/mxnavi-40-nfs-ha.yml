@@ -1,0 +1,57 @@
+# [optional] to synchronize time of nodes with 'chrony' 
+- hosts:
+  - nfs-ha-master
+  - nfs-ha-slave
+  roles:
+  - drbd
+
+- hosts:
+  - nfs-ha-master
+  tasks:
+  - name: clear primitive disk on drbd master
+    shell: wipefs -a {{ drbd_master_device }}
+
+- hosts:
+  - nfs-ha-slave
+  tasks:
+  - name: clear primitive disk on drbd slave
+    shell: wipefs -a {{ drbd_slave_device }}
+
+- hosts:
+  - nfs-ha-master
+  - nfs-ha-slave
+  tasks:
+  - name: create md on drbd master
+    shell: drbdadm -- --force create-md r0
+
+- hosts:
+  - nfs-ha-master
+  - nfs-ha-slave
+  tasks:
+  - name: start drbd
+    shell: /etc/init.d/drbd start
+
+- hosts:
+  - nfs-ha-master
+  tasks:
+  - name: set drbd primary
+    shell: drbdadm -- --overwrite-data-of-peer primary r0
+
+- hosts:
+  - nfs-ha-master
+  tasks:
+  - name: format & mount drbd0
+    shell: mkfs.ext4 /dev/drbd0
+
+- hosts:
+  - nfs-ha-master
+  - nfs-ha-slave
+  tasks:
+  - name: disable services
+    shell: systemctl disable drbd
+
+- hosts:
+  - nfs-ha-master
+  - nfs-ha-slave
+  roles:
+  - pacemaker

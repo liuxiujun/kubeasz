@@ -1,0 +1,39 @@
+resource r0 {
+     protocol C; 
+     startup { 
+          wfc-timeout 600;
+          degr-wfc-timeout 120; 
+     }
+     disk { 
+          on-io-error   detach; 
+     }
+     net { 
+          timeout 30;
+          connect-int 4;
+          ping-int 4;
+          max-buffers 2048;
+          max-epoch-size 2048;
+          ko-count 0;
+          #on-disconnect reconnect;
+          cram-hmac-alg sha1;
+          shared-secret "FooFunFactory";
+          after-sb-0pri discard-zero-changes;
+          after-sb-1pri discard-secondary;
+          after-sb-2pri disconnect;
+    }
+    syncer { 
+          rate 100M; 
+    }
+     on {{ nfs_ha_master_uname }} {
+          device    /dev/drbd0;
+          disk      {{ drbd_master_device }};
+          address   {{ nfs_ha_master_ip }}:{{ drbd_master_port }};
+          meta-disk  internal;
+     }
+     on {{ nfs_ha_slave_uname }} {
+          device    /dev/drbd0;
+          disk      {{ drbd_slave_device }};
+          address   {{ nfs_ha_slave_ip }}:{{ drbd_slave_port }};
+          meta-disk  internal;
+     }
+}

@@ -1,0 +1,66 @@
+# https://kubernetes.io/docs/concepts/services-networking/service/
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-grpc-server
+  labels:
+    app: demo-grpc-server
+spec:
+  ports:
+  - port: 8080
+    targetPort: 8080
+    protocol: TCP
+    # a DNS-1123 label must consist of lower case alphanumeric characters or '-', and must start and end with an alphanumeric character (e.g. 'my-name',  or '123-abc', regex used for validation is '[a-z0-9]([-a-z0-9]*[a-z0-9])?')
+    # http, http2, grpc, mongo, or redis. https://istio.io/docs/setup/kubernetes/spec-requirements/
+    name: http
+#   name: tongbo
+  - port: 9090
+    targetPort: 9090
+    protocol: TCP
+    name: grpc
+#   name: daigong
+  selector:
+    app: demo-grpc-server
+  type: ClusterIP
+---
+# https://kubernetes.io/docs/concepts/services-networking/ingress/
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: demo-grpc-server
+spec:
+  rules:
+  - host: demo-grpc-server.zhangtb.k8s-project.mxnavi.com
+    http:
+      paths:
+      - backend:
+          serviceName: demo-grpc-server
+          servicePort: http
+---
+# https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-grpc-server-deployment
+  labels:
+    app: demo-grpc-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo-grpc-server
+  template:
+    metadata:
+      labels:
+        app: demo-grpc-server
+#      annotations:
+#        sidecar.istio.io/inject: "false"
+    spec:
+      containers:
+        - name: demo-grpc-server
+          image: docker.mxnavi.com:5000/zhangtb/test/demo-grpc-server:0.0.4
+          imagePullPolicy: IfNotPresent
+          command: [ "/start.sh" ]
+          ports:
+            - containerPort: 8080
+            - containerPort: 9090

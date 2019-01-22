@@ -38,3 +38,15 @@
 - name: 删除istio mix rule中的 stdiotcp 标准输出流打印功能
   shell: "{{ bin_dir }}/kubectl delete -n istio-system rule stdiotcp"
   ignore_errors: true
+
+- name: 等待 meshpolicies.authentication.istio.io 创建成功
+  shell: "{{ bin_dir }}/kubectl get meshpolicies.authentication.istio.io default -o jsonpath={.metadata.name}"
+  register: json_output
+  until: json_output.stdout == "default"
+  delegate_to: "{{ groups.deploy[0] }}"
+  retries: 15
+  delay: 8
+
+- name: 某些场景 mtls 有问题，需删除 meshpolicies.authentication.istio.io
+  shell: "{{ bin_dir }}/kubectl delete meshpolicies.authentication.istio.io default"
+  ignore_errors: true

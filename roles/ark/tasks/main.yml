@@ -1,0 +1,17 @@
+- name: prereqs
+  shell: kubectl create -f {{ base_dir }}/manifests/ark/00-prereqs.yaml
+
+- name: deploy minio
+  shell: kubectl create -f {{ base_dir }}/manifests/ark/01-minio-deployment.yaml
+
+- name: deploy storage location
+  shell: kubectl create -f {{ base_dir }}/manifests/ark/05-ark-backupstoragelocation.yaml
+
+- name: deploy ark
+  shell: kubectl create -f {{ base_dir }}/manifests/ark/20-ark-deployment.yaml
+
+- name: dedploy restic
+  shell: kubectl create -f {{ base_dir }}/manifests/ark/30-restic-daemonset.yaml
+
+- name: ark command tool
+  shell: cp {{ base_dir }}/bin/ark /usr/bin/

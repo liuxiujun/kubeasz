@@ -20,6 +20,10 @@ controller:
      proxy-send-timeout: "3600"
      proxy-body-size: "100m"
      client-body-buffer-size: "1024k"
+     server_names_hash_bucket_size: "1024"
+     log-format-stream: "[$time_local] $protocol $status $bytes_sent $bytes_received $session_time"
+     log-format-upstream: "$remote_addr - [$the_real_ip] - $remote_user [$time_local] \"$request\" $status $body_bytes_sent \"$http_referer\" \"$http_user_agent\" $request_length $request_time [$proxy_upstream_name] $upstream_addr $upstream_response_length $upstream_response_time $upstream_status $req_id $namespace $service_name $service_port"
+
 
   tolerations:
     - key: "nginx-ingress"
